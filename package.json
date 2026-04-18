@@ -1,0 +1,19 @@
+{
+  "name": "bible-api-test",
+  "version": "1.0.0",
+  "description": "Bible verse API and website",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "security:check": "node scripts/security-check.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "helmet": "^8.1.0",
+    "redis": "^4.7.0"
+  }
+}

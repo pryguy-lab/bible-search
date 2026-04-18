@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: bible-api-test
+    runtime: node
+    plan: free
+    autoDeploy: true
+    healthCheckPath: /
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: TRUST_PROXY
+        value: "1"
+      - key: LOG_REQUESTS
+        value: "0"
+      - key: ALERT_WINDOW_MS
+        value: "60000"
+      - key: ALERT_4XX_THRESHOLD
+        value: "25"
+      - key: ALERT_429_THRESHOLD
+        value: "10"
+      - key: ADMIN_API_KEY
+        generateValue: true

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bible Verse Explorer</title>
+    <style>
+      :root {
+        --bg: #f8f4ea;
+        --card: #fffdf7;
+        --accent: #8c4a2f;
+        --accent-2: #3f6c51;
+        --text: #22201c;
+        --muted: #6f6a5f;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Georgia, "Times New Roman", serif;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 10% 10%, #efe3c4 0%, transparent 35%),
+          radial-gradient(circle at 90% 20%, #eadfcb 0%, transparent 30%),
+          var(--bg);
+        display: grid;
+        place-items: center;
+        padding: 1.25rem;
+      }
+
+      .app {
+        width: min(820px, 100%);
+        background: var(--card);
+        border: 1px solid #e2d9c5;
+        border-radius: 16px;
+        box-shadow: 0 16px 40px rgba(41, 36, 25, 0.12);
+        overflow: hidden;
+      }
+
+      .header {
+        padding: 1.25rem 1.25rem 0.75rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(1.4rem, 2.2vw, 2rem);
+        letter-spacing: 0.02em;
+      }
+
+      .subtitle {
+        margin-top: 0.5rem;
+        color: var(--muted);
+      }
+
+      .admin-link {
+        display: inline-block;
+        margin-top: 0.35rem;
+        color: var(--accent-2);
+        text-decoration: none;
+        font-size: 0.92rem;
+      }
+
+      .status-badge {
+        display: inline-block;
+        margin-left: 0.55rem;
+        padding: 0.18rem 0.45rem;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        vertical-align: middle;
+      }
+
+      .status-enabled {
+        background: #e3f3e8;
+        color: #1d5f3f;
+        border: 1px solid #b6dfc2;
+      }
+
+      .status-disabled {
+        background: #fbe9e6;
+        color: #8b3024;
+        border: 1px solid #e9bdb6;
+      }
+
+      .status-unknown {
+        background: #f1ece3;
+        color: #6f6a5f;
+        border: 1px solid #ddd1be;
+      }
+
+      .admin-link:hover {
+        text-decoration: underline;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+        padding: 0 1.25rem 1.25rem;
+      }
+
+      input,
+      select {
+        width: 100%;
+        padding: 0.75rem 0.9rem;
+        border: 1px solid #d2c3a7;
+        border-radius: 10px;
+        font-size: 1rem;
+        background: #fff;
+      }
+
+      button {
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-radius: 10px;
+        background: linear-gradient(120deg, var(--accent), #b56d4d);
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button:hover {
+        filter: brightness(1.06);
+      }
+
+      .outline-btn {
+        background: #fff;
+        color: var(--accent);
+        border: 1px solid #d2b08b;
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .builder {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 0.6rem;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        gap: 0.6rem;
+      }
+
+      .result {
+        border-top: 1px solid #eadfcb;
+        padding: 1.25rem;
+      }
+
+      .reference {
+        color: var(--accent-2);
+        font-weight: 700;
+      }
+
+      .text {
+        margin-top: 0.9rem;
+        line-height: 1.7;
+        white-space: pre-wrap;
+      }
+
+      .meta {
+        margin-top: 0.75rem;
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+
+      .error {
+        color: #a32727;
+        font-weight: 700;
+      }
+
+      .lists {
+        border-top: 1px solid #eadfcb;
+        padding: 0.75rem 1.25rem 1.25rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+
+      .panel {
+        background: #fff;
+        border: 1px solid #eadfcb;
+        border-radius: 12px;
+        padding: 0.8rem;
+      }
+
+      .panel h2 {
+        margin: 0 0 0.5rem;
+        font-size: 1rem;
+        color: var(--accent-2);
+      }
+
+      .item-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .chip {
+        display: block;
+        width: 100%;
+        text-align: left;
+        border-radius: 8px;
+        border: 1px solid #e5d9c5;
+        background: #fffdf9;
+        padding: 0.45rem 0.55rem;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.92rem;
+      }
+
+      .chip:hover {
+        border-color: #c8a37e;
+      }
+
+      .empty {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 640px) {
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .builder,
+        .toolbar,
+        .lists {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <section class="header">
+        <h1>Bible Verse Explorer</h1>
+        <p class="subtitle">
+          Build a reference with dropdowns or type one manually, then save your
+          favorites.
+        </p>
+        <a class="admin-link" href="/admin"
+          >Open Security Telemetry Dashboard</a
+        >
+        <span id="adminStatusBadge" class="status-badge status-unknown"
+          >Admin Telemetry: Checking...</span
+        >
+      </section>
+
+      <section class="controls">
+        <div class="full builder">
+          <select id="bookSelect" aria-label="Select Bible book"></select>
+          <select id="chapterSelect" aria-label="Select chapter"></select>
+          <select id="verseSelect" aria-label="Select verse"></select>
+          <button id="buildBtn" type="button" class="outline-btn">Use</button>
+        </div>
+
+        <select id="translationSelect" aria-label="Select translation">
+          <option value="web" selected>World English Bible (WEB)</option>
+          <option value="kjv">King James Version (KJV)</option>
+          <option value="asv">American Standard Version (ASV)</option>
+          <option value="bbe">Bible in Basic English (BBE)</option>
+        </select>
+
+        <div class="toolbar">
+          <input
+            id="referenceInput"
+            type="text"
+            placeholder="Enter verse reference"
+            value="John 3:16"
+          />
+          <button id="searchBtn" type="button">Get Verse</button>
+          <button id="favoriteBtn" type="button" class="outline-btn">
+            Save Favorite
+          </button>
+        </div>
+      </section>
+
+      <section class="result" id="resultBox">
+        <div class="meta">Search for a verse to begin.</div>
+      </section>
+
+      <section class="lists">
+        <article class="panel">
+          <h2>Recent Searches</h2>
+          <ul id="historyList" class="item-list"></ul>
+          <div id="historyEmpty" class="empty">No searches yet.</div>
+        </article>
+
+        <article class="panel">
+          <h2>Favorites</h2>
+          <ul id="favoriteList" class="item-list"></ul>
+          <div id="favoriteEmpty" class="empty">No favorites saved.</div>
+        </article>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
