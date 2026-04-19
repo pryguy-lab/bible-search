@@ -6,12 +6,19 @@
     <title>Bible Verse Explorer</title>
     <style>
       :root {
-        --bg: #f8f4ea;
-        --card: #fffdf7;
+        --bg: #f4efe4;
+        --bg-strong: #ebe0cc;
+        --card: rgba(255, 252, 245, 0.96);
+        --card-strong: #fffaf1;
         --accent: #8c4a2f;
-        --accent-2: #3f6c51;
-        --text: #22201c;
-        --muted: #6f6a5f;
+        --accent-2: #315e49;
+        --accent-soft: #efe0cf;
+        --line: #dfd1bb;
+        --text: #201c17;
+        --muted: #655f55;
+        --shadow: 0 22px 50px rgba(50, 39, 22, 0.12);
+        --btn-bg: #d6d1c6;
+        --btn-bg-active: #bdb8ad;
       }
 
       * {
@@ -24,54 +31,142 @@
         font-family: Georgia, "Times New Roman", serif;
         color: var(--text);
         background:
-          radial-gradient(circle at 10% 10%, #efe3c4 0%, transparent 35%),
-          radial-gradient(circle at 90% 20%, #eadfcb 0%, transparent 30%),
+          radial-gradient(circle at 12% 10%, #efe1bf 0%, transparent 28%),
+          radial-gradient(circle at 88% 16%, #e5d5b7 0%, transparent 24%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.25), transparent 38%),
           var(--bg);
-        display: grid;
-        place-items: center;
-        padding: 1.25rem;
+        padding: 2rem 1.25rem 3rem;
       }
 
       .app {
-        width: min(820px, 100%);
+        width: min(1180px, 100%);
+        margin: 0 auto;
         background: var(--card);
-        border: 1px solid #e2d9c5;
-        border-radius: 16px;
-        box-shadow: 0 16px 40px rgba(41, 36, 25, 0.12);
+        border: 1px solid rgba(171, 145, 108, 0.2);
+        border-radius: 28px;
+        box-shadow: var(--shadow);
         overflow: hidden;
+        backdrop-filter: blur(8px);
       }
 
       .header {
-        padding: 1.25rem 1.25rem 0.75rem;
+        padding: 2rem 2rem 1.5rem;
+        background:
+          linear-gradient(
+            135deg,
+            rgba(255, 248, 237, 0.96),
+            rgba(244, 233, 214, 0.82)
+          ),
+          var(--card-strong);
+        border-bottom: 1px solid var(--line);
       }
 
       h1 {
         margin: 0;
-        font-size: clamp(1.4rem, 2.2vw, 2rem);
-        letter-spacing: 0.02em;
+        font-size: clamp(1.8rem, 3vw, 2.8rem);
+        letter-spacing: 0.01em;
+        line-height: 1.1;
       }
 
       .subtitle {
-        margin-top: 0.5rem;
+        max-width: 54rem;
+        margin: 0.75rem 0 0;
         color: var(--muted);
+        font-size: 1.02rem;
+        line-height: 1.65;
+      }
+
+      .header-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .reading-mode-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.28rem;
+        border-radius: 999px;
+        background: rgba(255, 250, 241, 0.95);
+        border: 1px solid #dbc9ae;
+      }
+
+      .reading-mode-btn {
+        border: 0;
+        border-radius: 999px;
+        padding: 0.55rem 0.9rem;
+        background: var(--btn-bg);
+        color: var(--text);
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+
+      .reading-mode-btn:hover {
+        filter: brightness(0.95);
+      }
+
+      .reading-mode-btn-active {
+        background: var(--btn-bg-active);
+        color: var(--text);
+      }
+
+      .focus-mode-btn {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.72rem 1rem;
+        background: var(--btn-bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .focus-mode-btn:hover {
+        filter: brightness(0.95);
+      }
+
+      .focus-mode-btn-active {
+        background: var(--btn-bg-active);
+        border-color: transparent;
+        color: var(--text);
+      }
+
+      .spacing-mode-btn {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.72rem 1rem;
+        background: var(--btn-bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      .spacing-mode-btn:hover {
+        filter: brightness(0.95);
+      }
+
+      .spacing-mode-btn-active {
+        background: var(--btn-bg-active);
+        border-color: transparent;
+        color: var(--text);
       }
 
       .admin-link {
-        display: inline-block;
-        margin-top: 0.35rem;
         color: var(--accent-2);
         text-decoration: none;
-        font-size: 0.92rem;
+        font-size: 0.96rem;
+        font-weight: 700;
       }
 
       .status-badge {
-        display: inline-block;
-        margin-left: 0.55rem;
-        padding: 0.18rem 0.45rem;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.28rem 0.7rem;
         border-radius: 999px;
-        font-size: 0.76rem;
+        font-size: 0.78rem;
         font-weight: 700;
-        vertical-align: middle;
       }
 
       .status-enabled {
@@ -98,29 +193,64 @@
 
       .controls {
         display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.75rem;
-        padding: 0 1.25rem 1.25rem;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.95fr);
+        gap: 1.6rem;
+        padding: 1.8rem 2rem 0;
       }
 
       input,
       select {
         width: 100%;
-        padding: 0.75rem 0.9rem;
-        border: 1px solid #d2c3a7;
-        border-radius: 10px;
+        min-height: 52px;
+        padding: 0.98rem 1.05rem;
+        border: 1px solid #d7c8b3;
+        border-radius: 14px;
         font-size: 1rem;
-        background: #fff;
+        line-height: 1.35;
+        background: var(--card-strong);
+        color: var(--text);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+      }
+
+      select {
+        padding-right: 2.1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 128px;
+        padding: 1rem 1.05rem;
+        border: 1px solid #d7c8b3;
+        border-radius: 14px;
+        font-size: 0.98rem;
+        line-height: 1.65;
+        background: var(--card-strong);
+        resize: vertical;
+        font-family: Georgia, "Times New Roman", serif;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 2px solid rgba(140, 74, 47, 0.1);
+        outline-offset: 1px;
+        border-color: #bc9f82;
       }
 
       button {
-        padding: 0.75rem 1rem;
+        min-height: 50px;
+        padding: 0.92rem 1.12rem;
         border: 0;
-        border-radius: 10px;
-        background: linear-gradient(120deg, var(--accent), #b56d4d);
-        color: #fff;
+        border-radius: 14px;
+        background: var(--btn-bg);
+        color: var(--text);
         font-weight: 700;
         cursor: pointer;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
       }
 
       button:hover {
@@ -128,47 +258,607 @@
       }
 
       .outline-btn {
-        background: #fff;
-        color: var(--accent);
-        border: 1px solid #d2b08b;
+        background: var(--btn-bg);
+        color: var(--text);
+        border: 1px solid var(--line);
       }
 
       .full {
         grid-column: 1 / -1;
       }
 
+      .control-card,
+      .result,
+      .panel {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.55),
+          0 2px 6px rgba(58, 46, 31, 0.08),
+          0 12px 26px rgba(58, 46, 31, 0.08);
+      }
+
+      .control-card {
+        padding: 1.95rem 2.05rem;
+      }
+
+      .control-card-heading {
+        margin: 0 0 0.4rem;
+        font-size: 1.08rem;
+        color: var(--accent-2);
+      }
+
+      .control-card-copy {
+        margin: 0 0 1.55rem;
+        color: var(--muted);
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .field-block + .field-block {
+        margin-top: 1.7rem;
+      }
+
+      .field-label {
+        display: block;
+        margin-bottom: 0.55rem;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+      }
+
+      .theme-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1.1rem;
+      }
+
+      .theme-color-field {
+        display: grid;
+        justify-items: center;
+        gap: 0.22rem;
+        padding: 0.5rem 0.4rem;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--card-strong);
+      }
+
+      .theme-color-field label {
+        color: var(--muted);
+        font-size: 0.66rem;
+        font-weight: 700;
+        text-align: center;
+        line-height: 1.2;
+      }
+
+      .theme-color-meta {
+        display: grid;
+        justify-items: center;
+        gap: 0.22rem;
+        margin-top: 0.15rem;
+      }
+
+      .theme-color-input {
+        width: 24px;
+        height: 24px;
+        min-height: 24px;
+        min-width: 24px;
+        max-width: 24px;
+        border: 1px solid #cdbb9c;
+        border-radius: 50%;
+        padding: 0;
+        overflow: hidden;
+        background: transparent;
+        appearance: none;
+        -webkit-appearance: none;
+        flex: 0 0 24px;
+        display: block;
+        cursor: pointer;
+      }
+
+      .theme-color-input::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      .theme-color-input::-webkit-color-swatch {
+        border: 0;
+        border-radius: 50%;
+      }
+
+      .theme-color-input::-moz-color-swatch {
+        border: 0;
+        border-radius: 50%;
+      }
+
+      .theme-actions {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.55rem;
+        margin-top: 0.8rem;
+        overflow-x: auto;
+        padding-bottom: 0.2rem;
+      }
+
+      .theme-actions .outline-btn,
+      .theme-actions .file-btn {
+        min-height: 36px;
+        padding: 0.5rem 0.72rem;
+        font-size: 0.8rem;
+        border-radius: 10px;
+      }
+
+      .theme-status {
+        margin: 0;
+        margin-left: auto;
+        white-space: nowrap;
+        font-size: 0.82rem;
+      }
+
+      .theme-preview {
+        margin-top: 0.75rem;
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.55rem;
+      }
+
+      .theme-swatch {
+        display: grid;
+        justify-items: center;
+        gap: 0.25rem;
+        padding: 0.5rem 0.35rem;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: var(--card-strong);
+      }
+
+      .theme-swatch-chip {
+        width: 100%;
+        max-width: 34px;
+        height: 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(40, 30, 18, 0.22);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      }
+
+      .theme-swatch-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        font-weight: 700;
+        line-height: 1.25;
+        text-align: center;
+      }
+
+      .theme-swatch-value {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 0.62rem;
+        color: var(--muted);
+        padding: 0.08rem 0.24rem;
+        border-radius: 999px;
+        cursor: pointer;
+        user-select: all;
+        transition:
+          background-color 140ms ease,
+          color 140ms ease;
+      }
+
+      .theme-swatch-value:hover {
+        color: var(--text);
+        background: rgba(32, 28, 23, 0.08);
+      }
+
+      .theme-swatch-value:focus-visible {
+        outline: 1px solid rgba(32, 28, 23, 0.4);
+        outline-offset: 1px;
+      }
+
       .builder {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr auto;
-        gap: 0.6rem;
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+        gap: 1.15rem;
       }
 
       .toolbar {
         display: grid;
-        grid-template-columns: 1fr auto auto;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: 1.15rem;
+      }
+
+      .topic-bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1.8fr) minmax(0, 1fr) auto;
+        gap: 1.15rem;
+      }
+
+      .opinion-bar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.85rem;
+      }
+
+      .opinion-links {
+        margin-top: 0.85rem;
+        display: grid;
         gap: 0.6rem;
       }
 
+      .opinion-link {
+        display: block;
+        padding: 0.68rem 0.8rem;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--card-strong);
+        color: var(--accent-2);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 700;
+      }
+
+      .opinion-link:hover {
+        border-color: var(--accent);
+        background: var(--card);
+      }
+
+      .builder > *,
+      .toolbar > *,
+      .topic-bar > * {
+        min-width: 0;
+      }
+
       .result {
-        border-top: 1px solid #eadfcb;
-        padding: 1.25rem;
+        padding: 2.1rem 2.2rem;
+      }
+
+      .results-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.75rem;
+        padding: 1.7rem 2rem 0;
+      }
+
+      .result-heading {
+        margin: 0 0 1rem;
+        font-size: 0.95rem;
+        color: var(--accent-2);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .topic-result-list {
+        margin-top: 1.45rem;
+        display: grid;
+        gap: 1.25rem;
+      }
+
+      .topic-item {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1.3rem;
+        background: var(--card-strong);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+      }
+
+      .topic-item-reference {
+        color: var(--accent-2);
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+      }
+
+      .topic-ref-link {
+        display: inline-flex;
+        align-items: center;
+        color: var(--accent-2);
+        font-weight: 700;
+        font-size: 1rem;
+        letter-spacing: 0.01em;
+        line-height: 1.35;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.16em;
+      }
+
+      .topic-ref-link:hover {
+        color: var(--accent);
+      }
+
+      .custom-editor {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1.45rem;
+        background: var(--card);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.55),
+          0 2px 6px rgba(58, 46, 31, 0.06);
+      }
+
+      .custom-editor-title {
+        margin: 0 0 0.3rem;
+        color: var(--accent-2);
+        font-size: 1rem;
+      }
+
+      .custom-editor-copy {
+        margin: 0 0 1.1rem;
+        color: var(--muted);
+        font-size: 0.94rem;
+        line-height: 1.55;
+      }
+
+      .custom-editor-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.15rem;
+      }
+
+      .custom-editor-actions {
+        display: flex;
+        gap: 0.9rem;
+        flex-wrap: wrap;
+        margin-top: 1.15rem;
+      }
+
+      .custom-editor-options {
+        margin-top: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      .custom-editor-options input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+      }
+
+      .replace-confirm-wrap {
+        margin-top: 1.15rem;
+      }
+
+      .replace-confirm-label {
+        display: block;
+        color: var(--muted);
+        font-size: 0.88rem;
+        margin-bottom: 0.3rem;
+      }
+
+      .replace-confirm-input {
+        max-width: 280px;
+      }
+
+      .file-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.9rem 1.05rem;
+        border-radius: 14px;
+        background: var(--btn-bg);
+        color: var(--text);
+        border: 1px solid var(--line);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .file-btn:hover {
+        filter: brightness(1.06);
+      }
+
+      .file-btn-disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        pointer-events: none;
+        filter: none;
+      }
+
+      .hidden-file-input {
+        display: none;
+      }
+
+      .custom-topic-list {
+        list-style: none;
+        margin: 1.05rem 0 0;
+        padding: 0;
+        display: grid;
+        gap: 0.85rem;
+      }
+
+      .custom-topic-row {
+        display: flex;
+        gap: 0.65rem;
+        align-items: stretch;
+      }
+
+      .custom-topic-main {
+        flex: 1;
+      }
+
+      .custom-topic-main-btn {
+        flex: 1;
+        text-align: left;
+      }
+
+      .custom-topic-ref-list {
+        margin: 0.6rem 0 0;
+        padding-left: 1.25rem;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .custom-topic-ref-list li + li {
+        margin-top: 0.3rem;
+      }
+
+      .custom-topic-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .custom-topic-move-btn {
+        min-width: 2.4rem;
+        padding: 0.55rem 0.65rem;
+      }
+
+      .custom-editor-state {
+        margin-top: 1.05rem;
+      }
+
+      .danger-btn {
+        background: var(--btn-bg);
+        color: var(--text);
+        border: 1px solid var(--line);
       }
 
       .reference {
         color: var(--accent-2);
         font-weight: 700;
+        letter-spacing: 0.01em;
       }
 
       .text {
-        margin-top: 0.9rem;
-        line-height: 1.7;
+        margin-top: 1.2rem;
+        line-height: 1.9;
         white-space: pre-wrap;
+        font-size: 1rem;
       }
 
       .meta {
-        margin-top: 0.75rem;
+        margin-top: 1.1rem;
         color: var(--muted);
         font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      #resultBox .reference {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        border: 1px solid var(--line);
+        font-size: 0.95rem;
+      }
+
+      .passage-card #resultBox {
+        margin-top: 1.85rem;
+        background: var(--card-strong);
+      }
+
+      #resultBox .text {
+        max-width: 44ch;
+        font-size: clamp(1.12rem, 1.8vw, 1.34rem);
+        line-height: 1.95;
+        color: var(--text);
+      }
+
+      #resultBox .meta {
+        max-width: 52ch;
+      }
+
+      #topicResultsBox .reference {
+        font-size: 1.15rem;
+      }
+
+      #topicResultsBox .text {
+        margin-top: 0.65rem;
+        font-size: 1rem;
+        line-height: 1.85;
+      }
+
+      #topicResultsBox .meta {
+        max-width: 60ch;
+      }
+
+      body[data-reading-mode="compact"] #resultBox .text {
+        max-width: 58ch;
+        font-size: 1.02rem;
+        line-height: 1.72;
+      }
+
+      body[data-reading-mode="compact"] #topicResultsBox .text {
+        font-size: 0.95rem;
+        line-height: 1.65;
+      }
+
+      body[data-reading-mode="compact"] .result {
+        padding: 1.2rem 1.25rem;
+      }
+
+      body[data-reading-mode="compact"] .passage-card #resultBox {
+        margin-top: 1.25rem;
+      }
+
+      body[data-reading-mode="compact"] .topic-result-list {
+        gap: 0.7rem;
+      }
+
+      body[data-reading-mode="compact"] .topic-item {
+        padding: 0.85rem;
+      }
+
+      body[data-reading-mode="comfortable"] #resultBox .text {
+        max-width: 42ch;
+        font-size: clamp(1.16rem, 1.9vw, 1.42rem);
+        line-height: 2.02;
+      }
+
+      body[data-reading-mode="comfortable"] #topicResultsBox .text {
+        font-size: 1.02rem;
+        line-height: 1.9;
+      }
+
+      body[data-reading-mode="comfortable"] .result {
+        padding: 1.7rem 1.8rem;
+      }
+
+      body[data-reading-mode="comfortable"] .passage-card #resultBox {
+        margin-top: 2rem;
+      }
+
+      body[data-reading-mode="comfortable"] .topic-result-list {
+        gap: 1.1rem;
+      }
+
+      body[data-reading-mode="comfortable"] .topic-item {
+        padding: 1.1rem;
+      }
+
+      body[data-focus-mode="on"] .controls,
+      body[data-focus-mode="on"] .lists {
+        display: none;
+      }
+
+      body[data-focus-mode="on"] .app {
+        width: min(960px, 100%);
+      }
+
+      body[data-focus-mode="on"] .header {
+        padding-bottom: 1.2rem;
+      }
+
+      body[data-focus-mode="on"] .subtitle {
+        max-width: 42rem;
+      }
+
+      body[data-focus-mode="on"] .results-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding-top: 1.5rem;
+        padding-bottom: 1.7rem;
+      }
+
+      body[data-focus-mode="on"] .result {
+        box-shadow: 0 16px 34px rgba(58, 46, 31, 0.08);
+      }
+
+      body[data-focus-mode="on"] #resultBox .text {
+        max-width: 50ch;
+      }
+
+      body[data-focus-mode="on"] #topicResultsBox .topic-result-list {
+        gap: 1.15rem;
       }
 
       .error {
@@ -177,23 +867,246 @@
       }
 
       .lists {
-        border-top: 1px solid #eadfcb;
-        padding: 0.75rem 1.25rem 1.25rem;
+        padding: 1.7rem 2rem 2.5rem;
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.9rem;
+        gap: 1.75rem;
       }
 
       .panel {
-        background: #fff;
-        border: 1px solid #eadfcb;
-        border-radius: 12px;
-        padding: 0.8rem;
+        padding: 1.55rem;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.8rem;
+        margin-bottom: 0.9rem;
+      }
+
+      .panel-head h2 {
+        margin: 0;
+      }
+
+      .panel-clear-btn {
+        min-height: 0;
+        padding: 0.42rem 0.72rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--btn-bg);
+        color: var(--text);
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+
+      .panel-clear-btn:hover {
+        filter: brightness(0.95);
+      }
+
+      .panel-clear-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        filter: none;
+      }
+
+      .undo-toast {
+        position: fixed;
+        left: 50%;
+        bottom: 1rem;
+        transform: translate(-50%, 130%);
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.65rem 0.7rem 0.65rem 0.95rem;
+        border-radius: 14px;
+        border: 1px solid #d7c8b3;
+        background: rgba(34, 29, 22, 0.96);
+        color: #f6eee0;
+        box-shadow: 0 16px 36px rgba(24, 19, 14, 0.28);
+        z-index: 30;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          transform 160ms ease,
+          opacity 160ms ease;
+      }
+
+      .undo-toast-show {
+        transform: translate(-50%, 0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .undo-toast-text {
+        font-size: 0.9rem;
+        line-height: 1.3;
+      }
+
+      .undo-toast-btn {
+        min-height: 0;
+        padding: 0.4rem 0.75rem;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 251, 244, 0.35);
+        background: rgba(255, 251, 244, 0.12);
+        color: #fff;
+        font-size: 0.82rem;
+        font-weight: 700;
+        line-height: 1.1;
+      }
+
+      .undo-toast-btn:hover {
+        filter: none;
+        background: rgba(255, 251, 244, 0.22);
+      }
+
+      .undo-toast-close {
+        min-height: 0;
+        width: 1.9rem;
+        height: 1.9rem;
+        padding: 0;
+        border-radius: 999px;
+      }
+
+      .theme-card .field-block,
+      .passage-card .field-block,
+      .topic-card .field-block {
+        margin-bottom: 0.2rem;
+      }
+
+      .theme-card .theme-grid {
+        margin-top: 0.4rem;
+        grid-template-columns: repeat(8, minmax(0, 1fr));
+        gap: 1.1rem;
+      }
+
+      .theme-card .theme-actions {
+        margin-top: 1rem;
+        gap: 0.6rem;
+      }
+
+      .theme-card .theme-preview {
+        margin-top: 1rem;
+        gap: 0.75rem;
+      }
+
+      .passage-card .builder,
+      .passage-card .toolbar,
+      .topic-card .topic-bar {
+        gap: 1.35rem;
+      }
+
+      .topic-card .opinion-bar {
+        gap: 0.95rem;
+      }
+
+      .topic-card .topic-bar {
+        grid-template-columns: minmax(0, 2.45fr) minmax(0, 0.95fr) auto;
+        gap: 1rem;
+        margin-inline: 0.1rem;
+      }
+
+      .topic-card .topic-bar select {
+        max-width: 100%;
+      }
+
+      .topic-card .custom-editor {
+        margin-top: 1.35rem;
+      }
+
+      .topic-card .custom-editor-grid {
+        gap: 1.35rem;
+      }
+
+      .topic-card .custom-editor-actions {
+        margin-top: 1.35rem;
+        gap: 1rem;
+      }
+
+      .topic-card .custom-topic-list {
+        margin-top: 1.2rem;
+        gap: 0.95rem;
+      }
+
+      .topic-card .custom-topic-row {
+        gap: 0.75rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .theme-card .theme-grid {
+        gap: 1.7rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .passage-card .builder,
+      body[data-spacing-mode="relaxed"] .passage-card .toolbar,
+      body[data-spacing-mode="relaxed"] .topic-card .topic-bar {
+        gap: 1.6rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .topic-card .opinion-bar {
+        gap: 1.1rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .topic-card .topic-bar {
+        grid-template-columns: minmax(0, 2.6fr) minmax(0, 0.9fr) auto;
+        gap: 1.2rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .topic-card .custom-editor-grid {
+        gap: 1.55rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .controls {
+        gap: 1.95rem;
+        padding-top: 2.05rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .control-card {
+        padding: 2.2rem 2.35rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .control-card-copy {
+        margin-bottom: 1.55rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .field-block + .field-block {
+        margin-top: 1.95rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .theme-actions {
+        margin-top: 1.15rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .passage-card #resultBox {
+        margin-top: 2.25rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .result {
+        padding: 2.35rem 2.45rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .results-grid {
+        gap: 1.75rem;
+        padding-top: 1.7rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .custom-editor {
+        padding: 1.45rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .lists {
+        gap: 2rem;
+        padding-top: 1.95rem;
+        padding-bottom: 2.7rem;
+      }
+
+      body[data-spacing-mode="relaxed"] .panel {
+        padding: 1.75rem;
       }
 
       .panel h2 {
-        margin: 0 0 0.5rem;
-        font-size: 1rem;
+        margin: 0;
+        font-size: 1.02rem;
         color: var(--accent-2);
       }
 
@@ -202,20 +1115,46 @@
         margin: 0;
         padding: 0;
         display: grid;
-        gap: 0.45rem;
+        gap: 0.65rem;
+      }
+
+      .saved-item-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 0.55rem;
+        align-items: center;
       }
 
       .chip {
         display: block;
         width: 100%;
         text-align: left;
-        border-radius: 8px;
-        border: 1px solid #e5d9c5;
-        background: #fffdf9;
-        padding: 0.45rem 0.55rem;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: var(--card-strong);
+        padding: 0.85rem 0.95rem;
         color: var(--text);
         cursor: pointer;
-        font-size: 0.92rem;
+        font-size: 0.95rem;
+      }
+
+      .chip-remove-btn {
+        min-height: 0;
+        width: 2.25rem;
+        height: 2.25rem;
+        padding: 0;
+        border-radius: 10px;
+        border: 1px solid #ddbbbb;
+        background: #fff9f8;
+        color: #a32727;
+        font-size: 1rem;
+        line-height: 1;
+        font-weight: 700;
+      }
+
+      .chip-remove-btn:hover {
+        filter: none;
+        background: #fdeeee;
       }
 
       .chip:hover {
@@ -227,6 +1166,36 @@
         font-size: 0.9rem;
       }
 
+      @media (max-width: 900px) {
+        .controls,
+        .results-grid,
+        .lists {
+          grid-template-columns: 1fr;
+        }
+
+        .theme-card .theme-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .theme-actions {
+          flex-wrap: wrap;
+          overflow-x: visible;
+        }
+
+        .theme-status {
+          margin-left: 0;
+          width: 100%;
+        }
+
+        .header,
+        .controls,
+        .results-grid,
+        .lists {
+          padding-left: 1.2rem;
+          padding-right: 1.2rem;
+        }
+      }
+
       @media (max-width: 640px) {
         .controls {
           grid-template-columns: 1fr;
@@ -234,8 +1203,89 @@
 
         .builder,
         .toolbar,
-        .lists {
+        .topic-bar,
+        .custom-editor-grid,
+        .theme-grid {
           grid-template-columns: 1fr;
+        }
+
+        .theme-preview {
+          grid-template-columns: 1fr;
+        }
+
+        .header {
+          padding-top: 1.5rem;
+        }
+
+        .control-card,
+        .result,
+        .panel,
+        .custom-editor {
+          padding: 1.15rem;
+        }
+
+        body[data-spacing-mode="relaxed"] .control-card,
+        body[data-spacing-mode="relaxed"] .result,
+        body[data-spacing-mode="relaxed"] .panel,
+        body[data-spacing-mode="relaxed"] .custom-editor {
+          padding: 1.3rem;
+        }
+
+        #resultBox .text {
+          font-size: 1.06rem;
+          max-width: none;
+        }
+
+        #topicResultsBox .result-heading {
+          font-size: 1.02rem;
+          letter-spacing: 0.06em;
+        }
+
+        #topicResultsBox .meta {
+          font-size: 1rem;
+          line-height: 1.7;
+        }
+
+        #topicResultsBox .topic-result-list {
+          margin-top: 1rem;
+          gap: 0.7rem;
+        }
+
+        #topicResultsBox .topic-item {
+          padding: 0.9rem;
+          border-radius: 12px;
+        }
+
+        #topicResultsBox .topic-ref-link {
+          display: flex;
+          width: 100%;
+          min-height: 44px;
+          align-items: center;
+          padding: 0.25rem 0;
+          overflow-wrap: anywhere;
+        }
+
+        #topicResultsBox .search-result-group + .search-result-group {
+          margin-top: 0.9rem;
+        }
+
+        .custom-topic-row,
+        .custom-topic-controls,
+        .header-meta,
+        .reading-mode-switch {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .custom-topic-move-btn,
+        .reading-mode-btn,
+        .focus-mode-btn,
+        .file-btn,
+        .custom-editor-actions button,
+        .toolbar button,
+        .topic-bar button,
+        .builder button {
+          width: 100%;
         }
       }
     </style>
@@ -248,61 +1298,485 @@
           Build a reference with dropdowns or type one manually, then save your
           favorites.
         </p>
-        <a class="admin-link" href="/admin"
-          >Open Security Telemetry Dashboard</a
-        >
-        <span id="adminStatusBadge" class="status-badge status-unknown"
-          >Admin Telemetry: Checking...</span
-        >
-      </section>
-
-      <section class="controls">
-        <div class="full builder">
-          <select id="bookSelect" aria-label="Select Bible book"></select>
-          <select id="chapterSelect" aria-label="Select chapter"></select>
-          <select id="verseSelect" aria-label="Select verse"></select>
-          <button id="buildBtn" type="button" class="outline-btn">Use</button>
-        </div>
-
-        <select id="translationSelect" aria-label="Select translation">
-          <option value="web" selected>World English Bible (WEB)</option>
-          <option value="kjv">King James Version (KJV)</option>
-          <option value="asv">American Standard Version (ASV)</option>
-          <option value="bbe">Bible in Basic English (BBE)</option>
-        </select>
-
-        <div class="toolbar">
-          <input
-            id="referenceInput"
-            type="text"
-            placeholder="Enter verse reference"
-            value="John 3:16"
-          />
-          <button id="searchBtn" type="button">Get Verse</button>
-          <button id="favoriteBtn" type="button" class="outline-btn">
-            Save Favorite
+        <div class="header-meta">
+          <a class="admin-link" href="/admin"
+            >Open Security Telemetry Dashboard</a
+          >
+          <span id="adminStatusBadge" class="status-badge status-unknown"
+            >Admin Telemetry: Checking...</span
+          >
+          <div class="reading-mode-switch" aria-label="Reading mode toggle">
+            <button
+              id="compactModeBtn"
+              class="reading-mode-btn"
+              type="button"
+              aria-pressed="false"
+            >
+              Compact
+            </button>
+            <button
+              id="comfortableModeBtn"
+              class="reading-mode-btn"
+              type="button"
+              aria-pressed="true"
+            >
+              Comfortable
+            </button>
+          </div>
+          <button
+            id="focusModeBtn"
+            class="focus-mode-btn"
+            type="button"
+            aria-pressed="false"
+          >
+            Focus Reading
+          </button>
+          <button
+            id="spacingModeBtn"
+            class="spacing-mode-btn"
+            type="button"
+            aria-pressed="false"
+          >
+            Relaxed Spacing
           </button>
         </div>
       </section>
 
-      <section class="result" id="resultBox">
-        <div class="meta">Search for a verse to begin.</div>
+      <section class="controls">
+        <article class="control-card full theme-card">
+          <h2 class="control-card-heading">Theme Customizer</h2>
+          <p class="control-card-copy">
+            Choose a preset palette or fine-tune your own colors for background,
+            text, and accents.
+          </p>
+
+          <div class="field-block">
+            <label class="field-label" for="themePresetSelect"
+              >Color Preset</label
+            >
+            <select id="themePresetSelect" aria-label="Select color preset">
+              <option value="warm">Warm Parchment</option>
+              <option value="forest">Forest Study</option>
+              <option value="ocean">Ocean Notes</option>
+              <option value="contrast">High Contrast</option>
+              <option value="custom">Custom</option>
+            </select>
+          </div>
+
+          <div class="theme-grid">
+            <div class="theme-color-field">
+              <label for="themeBgInput">Background</label>
+              <input id="themeBgInput" class="theme-color-input" type="color" />
+              <div class="theme-color-meta">
+                <span id="themeSwatchBg" class="theme-swatch-chip"></span>
+                <span id="themeSwatchBgValue" class="theme-swatch-value"></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeCardInput">Card</label>
+              <input
+                id="themeCardInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchCard" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchCardValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeCardStrongInput">Header Card</label>
+              <input
+                id="themeCardStrongInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span
+                  id="themeSwatchCardStrong"
+                  class="theme-swatch-chip"
+                ></span>
+                <span
+                  id="themeSwatchCardStrongValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeTextInput">Text</label>
+              <input
+                id="themeTextInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchText" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchTextValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeMutedInput">Muted Text</label>
+              <input
+                id="themeMutedInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchMuted" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchMutedValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeAccentInput">Primary Accent</label>
+              <input
+                id="themeAccentInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchAccent" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchAccentValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeAccent2Input">Secondary Accent</label>
+              <input
+                id="themeAccent2Input"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchAccent2" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchAccent2Value"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeLineInput">Border Line</label>
+              <input
+                id="themeLineInput"
+                class="theme-color-input"
+                type="color"
+              />
+              <div class="theme-color-meta">
+                <span id="themeSwatchLine" class="theme-swatch-chip"></span>
+                <span
+                  id="themeSwatchLineValue"
+                  class="theme-swatch-value"
+                ></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="theme-actions">
+            <button id="resetThemeBtn" type="button" class="outline-btn">
+              Reset Theme
+            </button>
+            <button id="exportThemeBtn" type="button" class="outline-btn">
+              Export Theme
+            </button>
+            <label
+              id="importThemeLabel"
+              for="importThemeInput"
+              class="file-btn"
+            >
+              Import Theme
+            </label>
+            <input
+              id="importThemeInput"
+              class="hidden-file-input"
+              type="file"
+              accept="application/json"
+            />
+            <div id="themeStatus" class="meta theme-status"></div>
+          </div>
+        </article>
+
+        <article class="control-card passage-card">
+          <h2 class="control-card-heading">Find A Passage</h2>
+          <p class="control-card-copy">
+            Build a reference step by step or type one directly, then search and
+            save it for later.
+          </p>
+
+          <div class="field-block">
+            <label class="field-label">Reference Builder</label>
+            <div class="builder">
+              <select id="bookSelect" aria-label="Select Bible book"></select>
+              <select id="chapterSelect" aria-label="Select chapter"></select>
+              <select id="verseSelect" aria-label="Select verse"></select>
+              <button id="buildBtn" type="button" class="outline-btn">
+                Use
+              </button>
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label class="field-label" for="translationSelect"
+              >Translation</label
+            >
+            <select id="translationSelect" aria-label="Select translation">
+              <option value="web" selected>World English Bible (WEB)</option>
+              <option value="kjv">King James Version (KJV)</option>
+              <option value="asv">American Standard Version (ASV)</option>
+              <option value="bbe">Bible in Basic English (BBE)</option>
+            </select>
+          </div>
+
+          <div class="field-block">
+            <label class="field-label" for="referenceInput"
+              >Manual Search</label
+            >
+            <div class="toolbar">
+              <input
+                id="referenceInput"
+                type="text"
+                placeholder="Enter verse reference"
+                value="John 3:16"
+              />
+              <button id="searchBtn" type="button">Get Verse</button>
+              <button id="favoriteBtn" type="button" class="outline-btn">
+                Save Favorite
+              </button>
+            </div>
+          </div>
+
+          <section class="result" id="resultBox">
+            <h2 class="result-heading">Verse Result</h2>
+            <div class="meta">Search for a verse to begin.</div>
+          </section>
+        </article>
+
+        <article class="control-card topic-card">
+          <h2 class="control-card-heading">Study By Topic</h2>
+          <p class="control-card-copy">
+            Browse built-in topics, filter them quickly, or manage your own
+            study collections below.
+          </p>
+
+          <div class="field-block">
+            <label class="field-label" for="bibleSubjectInput"
+              >Bible Subject Search</label
+            >
+            <div class="opinion-bar">
+              <input
+                id="bibleSubjectInput"
+                type="text"
+                placeholder="e.g., same sex marriage, divorce"
+                title="Enter any subject to find what the Bible says about it"
+              />
+              <button id="bibleSearchBtn" type="button" class="outline-btn">
+                Search Bible
+              </button>
+              <button
+                id="bibleSearchClearBtn"
+                type="button"
+                class="outline-btn"
+                style="display: none"
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label class="field-label">Browse Built-in Topics (Optional)</label>
+            <div class="topic-bar">
+              <select id="topicSelect" aria-label="Select topic">
+                <option value="">Select a Bible subject...</option>
+              </select>
+              <button id="topicSearchBtn" type="button" class="outline-btn">
+                Load Topic
+              </button>
+            </div>
+          </div>
+
+          <div class="field-block">
+            <label class="field-label" for="opinionSubjectInput"
+              >Opinion Search (Web)</label
+            >
+            <div class="opinion-bar">
+              <input
+                id="opinionSubjectInput"
+                type="text"
+                placeholder="e.g., same sex marriage, divorce"
+                title="Enter a Bible-related subject to search the web for different viewpoints"
+              />
+              <button id="opinionSearchBtn" type="button" class="outline-btn">
+                Search Web
+              </button>
+            </div>
+            <div id="opinionLinksBox" class="opinion-links"></div>
+          </div>
+
+          <section class="result" id="topicResultsBox">
+            <h2 class="result-heading">Topic Passages</h2>
+            <div class="meta">Pick a topic to view related passages.</div>
+          </section>
+        </article>
+      </section>
+
+      <section class="results-grid">
+        <div class="custom-editor">
+          <h3 class="custom-editor-title">Manage Custom Topics</h3>
+          <p class="custom-editor-copy">
+            Create and organize your own topic passage sets, then import or
+            export them for backup.
+          </p>
+          <div class="custom-editor-grid">
+            <div>
+              <label class="field-label" for="customTopicName"
+                >Topic Name</label
+              >
+              <input
+                id="customTopicName"
+                type="text"
+                placeholder="Topic name (e.g., Forgiveness)"
+              />
+            </div>
+            <div>
+              <label class="field-label" for="customTopicDescription"
+                >Short Description</label
+              >
+              <input
+                id="customTopicDescription"
+                type="text"
+                placeholder="Short description"
+              />
+            </div>
+            <div class="full">
+              <label class="field-label" for="customTopicRefs"
+                >References</label
+              >
+              <textarea
+                id="customTopicRefs"
+                class="full"
+                placeholder="References (one per line or comma separated), e.g.\nMatthew 6:14\nEphesians 4:32"
+              ></textarea>
+            </div>
+          </div>
+          <div class="custom-editor-actions">
+            <button id="saveCustomTopicBtn" type="button" class="outline-btn">
+              Save Custom Topic
+            </button>
+            <button
+              id="cancelCustomTopicEditBtn"
+              type="button"
+              class="outline-btn"
+            >
+              Cancel Edit
+            </button>
+            <button id="deleteCustomTopicBtn" type="button" class="danger-btn">
+              Delete Selected Custom Topic
+            </button>
+            <button
+              id="exportCustomTopicsBtn"
+              type="button"
+              class="outline-btn"
+            >
+              Export Topics
+            </button>
+            <label
+              id="importCustomTopicsLabel"
+              for="importCustomTopicsInput"
+              class="file-btn"
+            >
+              Import Topics
+            </label>
+            <input
+              id="importCustomTopicsInput"
+              class="hidden-file-input"
+              type="file"
+              accept="application/json"
+            />
+          </div>
+          <label class="custom-editor-options" for="replaceCustomTopicsMode">
+            <input id="replaceCustomTopicsMode" type="checkbox" />
+            Replace existing custom topics on import
+          </label>
+          <div class="replace-confirm-wrap">
+            <label class="replace-confirm-label" for="replaceConfirmInput"
+              >Type REPLACE to allow destructive import</label
+            >
+            <input
+              id="replaceConfirmInput"
+              class="replace-confirm-input"
+              type="text"
+              placeholder="Type REPLACE"
+              autocomplete="off"
+            />
+          </div>
+          <div id="customEditorState" class="meta custom-editor-state">
+            Creating a new custom topic.
+          </div>
+          <div id="customTopicStatus" class="meta"></div>
+          <ul id="customTopicList" class="custom-topic-list"></ul>
+        </div>
       </section>
 
       <section class="lists">
         <article class="panel">
-          <h2>Recent Searches</h2>
+          <div class="panel-head">
+            <h2>Recent Searches</h2>
+            <button id="clearHistoryBtn" class="panel-clear-btn" type="button">
+              Clear All
+            </button>
+          </div>
           <ul id="historyList" class="item-list"></ul>
           <div id="historyEmpty" class="empty">No searches yet.</div>
         </article>
 
         <article class="panel">
-          <h2>Favorites</h2>
+          <div class="panel-head">
+            <h2>Favorites</h2>
+            <button
+              id="clearFavoritesBtn"
+              class="panel-clear-btn"
+              type="button"
+            >
+              Clear All
+            </button>
+          </div>
           <ul id="favoriteList" class="item-list"></ul>
           <div id="favoriteEmpty" class="empty">No favorites saved.</div>
         </article>
       </section>
     </main>
+
+    <div
+      id="undoToast"
+      class="undo-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+    >
+      <span id="undoToastText" class="undo-toast-text"></span>
+      <button id="undoToastActionBtn" class="undo-toast-btn" type="button">
+        Undo
+      </button>
+      <button
+        id="undoToastCloseBtn"
+        class="undo-toast-btn undo-toast-close"
+        type="button"
+        aria-label="Dismiss undo message"
+      >
+        x
+      </button>
+    </div>
 
     <script src="app.js"></script>
   </body>

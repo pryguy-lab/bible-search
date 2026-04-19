@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "theme": {
+    "bg": "#eef4e6",
+    "card": "#f9fff4",
+    "cardStrong": "#f5ffed",
+    "text": "#1d2a1a",
+    "muted": "#556b4e",
+    "accent": "#56793f",
+    "accent2": "#2e6650",
+    "line": "#cdddca"
+  }
+}

@@ -19,6 +19,80 @@ const ALERT_WINDOW_MS = Number(process.env.ALERT_WINDOW_MS || 60_000);
 const ALERT_4XX_THRESHOLD = Number(process.env.ALERT_4XX_THRESHOLD || 25);
 const ALERT_429_THRESHOLD = Number(process.env.ALERT_429_THRESHOLD || 10);
 const ADMIN_API_KEY = String(process.env.ADMIN_API_KEY || "");
+const TOPICS = [
+  {
+    id: "holy-spirit",
+    name: "Holy Spirit",
+    description: "Key passages on the person and work of the Holy Spirit.",
+    references: [
+      "John 14:26",
+      "John 16:13",
+      "Acts 1:8",
+      "Romans 8:26",
+      "Galatians 5:22-23",
+    ],
+  },
+  {
+    id: "burial-resurrection",
+    name: "Jesus' Burial and Resurrection",
+    description: "Core passages on Christ's death, burial, and resurrection.",
+    references: [
+      "Matthew 27:59-60",
+      "Mark 16:6",
+      "Luke 24:6-7",
+      "John 20:1-2",
+      "1 Corinthians 15:3-4",
+    ],
+  },
+  {
+    id: "creation",
+    name: "Creation of the Universe",
+    description: "Passages describing God as Creator.",
+    references: [
+      "Genesis 1:1",
+      "Psalm 19:1",
+      "John 1:1-3",
+      "Colossians 1:16",
+      "Hebrews 11:3",
+    ],
+  },
+  {
+    id: "salvation",
+    name: "Salvation",
+    description: "Verses about grace, faith, and redemption.",
+    references: [
+      "John 3:16",
+      "Romans 10:9",
+      "Ephesians 2:8-9",
+      "Titus 3:5",
+      "1 Peter 1:3",
+    ],
+  },
+  {
+    id: "prayer",
+    name: "Prayer",
+    description: "Encouragement and instruction for prayer.",
+    references: [
+      "Matthew 6:9-13",
+      "Philippians 4:6-7",
+      "1 Thessalonians 5:17",
+      "James 5:16",
+      "1 John 5:14",
+    ],
+  },
+  {
+    id: "faith",
+    name: "Faith",
+    description: "Passages about trusting God and living by faith.",
+    references: [
+      "Hebrews 11:1",
+      "Romans 1:17",
+      "2 Corinthians 5:7",
+      "James 1:3",
+      "Mark 11:24",
+    ],
+  },
+];
 const alertBuckets = new Map();
 let redisClient = null;
 let redisReady = false;
@@ -311,6 +385,10 @@ function isValidChapter(chapter) {
   return /^\d{1,3}$/.test(chapter);
 }
 
+function isValidTopicId(topicId) {
+  return /^[a-z0-9-]{2,40}$/.test(topicId);
+}
+
 async function fetchBibleData(reference, translation) {
   const params = new URLSearchParams();
 
@@ -461,6 +539,95 @@ app.get("/api/chapter-meta", async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error: "Server error while fetching chapter metadata",
+    });
+  }
+});
+
+app.get("/api/topics", (req, res) => {
+  const q = String(req.query.q || "")
+    .trim()
+    .toLowerCase();
+
+  const list = TOPICS.filter((topic) => {
+    if (!q) {
+      return true;
+    }
+
+    return (
+      topic.name.toLowerCase().includes(q) ||
+      topic.description.toLowerCase().includes(q)
+    );
+  }).map((topic) => ({
+    id: topic.id,
+    name: topic.name,
+    description: topic.description,
+  }));
+
+  return res.json({
+    count: list.length,
+    topics: list,
+  });
+});
+
+app.get("/api/topic-verses", async (req, res) => {
+  const topicId = String(req.query.topic || "")
+    .trim()
+    .toLowerCase();
+  const translation = cleanTranslation(req.query.translation);
+
+  res.setHeader("Cache-Control", "no-store");
+
+  if (!topicId || !isValidTopicId(topicId)) {
+    return res.status(400).json({
+      error: "Missing or invalid topic query parameter.",
+    });
+  }
+
+  if (translation === null) {
+    return res.status(400).json({
+      error: "Unsupported translation.",
+    });
+  }
+
+  const topic = TOPICS.find((item) => item.id === topicId);
+  if (!topic) {
+    return res.status(404).json({
+      error: "Topic not found.",
+    });
+  }
+
+  try {
+    const results = await Promise.all(
+      topic.references.map(async (reference) => {
+        const fetched = await fetchBibleData(reference, translation);
+
+        if (!fetched.ok || !fetched.data) {
+          return null;
+        }
+
+        return {
+          query: reference,
+          canonicalReference: fetched.data.reference,
+          translation: fetched.data.translation_name,
+          translationId: fetched.data.translation_id,
+          text: fetched.data.text,
+        };
+      }),
+    );
+
+    const verses = results.filter(Boolean);
+    return res.json({
+      topic: {
+        id: topic.id,
+        name: topic.name,
+        description: topic.description,
+      },
+      count: verses.length,
+      verses,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: "Server error while fetching topic verses",
     });
   }
 });

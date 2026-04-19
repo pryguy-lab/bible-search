@@ -7,15 +7,158 @@ const bookSelect = document.getElementById("bookSelect");
 const chapterSelect = document.getElementById("chapterSelect");
 const verseSelect = document.getElementById("verseSelect");
 const buildBtn = document.getElementById("buildBtn");
+const bibleSubjectInput = document.getElementById("bibleSubjectInput");
+const bibleSearchBtn = document.getElementById("bibleSearchBtn");
+const bibleSearchClearBtn = document.getElementById("bibleSearchClearBtn");
+const topicSelect = document.getElementById("topicSelect");
+const topicSearchBtn = document.getElementById("topicSearchBtn");
+const topicResultsBox = document.getElementById("topicResultsBox");
+const opinionSubjectInput = document.getElementById("opinionSubjectInput");
+const opinionSearchBtn = document.getElementById("opinionSearchBtn");
+const opinionLinksBox = document.getElementById("opinionLinksBox");
+const customTopicName = document.getElementById("customTopicName");
+const customTopicDescription = document.getElementById(
+  "customTopicDescription",
+);
+const customTopicRefs = document.getElementById("customTopicRefs");
+const saveCustomTopicBtn = document.getElementById("saveCustomTopicBtn");
+const cancelCustomTopicEditBtn = document.getElementById(
+  "cancelCustomTopicEditBtn",
+);
+const deleteCustomTopicBtn = document.getElementById("deleteCustomTopicBtn");
+const exportCustomTopicsBtn = document.getElementById("exportCustomTopicsBtn");
+const importCustomTopicsInput = document.getElementById(
+  "importCustomTopicsInput",
+);
+const importCustomTopicsLabel = document.getElementById(
+  "importCustomTopicsLabel",
+);
+const replaceCustomTopicsMode = document.getElementById(
+  "replaceCustomTopicsMode",
+);
+const replaceConfirmInput = document.getElementById("replaceConfirmInput");
+const customEditorState = document.getElementById("customEditorState");
+const customTopicStatus = document.getElementById("customTopicStatus");
+const customTopicList = document.getElementById("customTopicList");
 const historyList = document.getElementById("historyList");
 const favoriteList = document.getElementById("favoriteList");
 const historyEmpty = document.getElementById("historyEmpty");
 const favoriteEmpty = document.getElementById("favoriteEmpty");
+const clearHistoryBtn = document.getElementById("clearHistoryBtn");
+const clearFavoritesBtn = document.getElementById("clearFavoritesBtn");
+const undoToast = document.getElementById("undoToast");
+const undoToastText = document.getElementById("undoToastText");
+const undoToastActionBtn = document.getElementById("undoToastActionBtn");
+const undoToastCloseBtn = document.getElementById("undoToastCloseBtn");
 const adminStatusBadge = document.getElementById("adminStatusBadge");
+const compactModeBtn = document.getElementById("compactModeBtn");
+const comfortableModeBtn = document.getElementById("comfortableModeBtn");
+const focusModeBtn = document.getElementById("focusModeBtn");
+const spacingModeBtn = document.getElementById("spacingModeBtn");
+const themePresetSelect = document.getElementById("themePresetSelect");
+const themeBgInput = document.getElementById("themeBgInput");
+const themeCardInput = document.getElementById("themeCardInput");
+const themeCardStrongInput = document.getElementById("themeCardStrongInput");
+const themeTextInput = document.getElementById("themeTextInput");
+const themeMutedInput = document.getElementById("themeMutedInput");
+const themeAccentInput = document.getElementById("themeAccentInput");
+const themeAccent2Input = document.getElementById("themeAccent2Input");
+const themeLineInput = document.getElementById("themeLineInput");
+const resetThemeBtn = document.getElementById("resetThemeBtn");
+const exportThemeBtn = document.getElementById("exportThemeBtn");
+const importThemeInput = document.getElementById("importThemeInput");
+const themeStatus = document.getElementById("themeStatus");
+const themeSwatchBg = document.getElementById("themeSwatchBg");
+const themeSwatchCard = document.getElementById("themeSwatchCard");
+const themeSwatchCardStrong = document.getElementById("themeSwatchCardStrong");
+const themeSwatchText = document.getElementById("themeSwatchText");
+const themeSwatchMuted = document.getElementById("themeSwatchMuted");
+const themeSwatchAccent = document.getElementById("themeSwatchAccent");
+const themeSwatchAccent2 = document.getElementById("themeSwatchAccent2");
+const themeSwatchLine = document.getElementById("themeSwatchLine");
+const themeSwatchBgValue = document.getElementById("themeSwatchBgValue");
+const themeSwatchCardValue = document.getElementById("themeSwatchCardValue");
+const themeSwatchCardStrongValue = document.getElementById(
+  "themeSwatchCardStrongValue",
+);
+const themeSwatchTextValue = document.getElementById("themeSwatchTextValue");
+const themeSwatchMutedValue = document.getElementById("themeSwatchMutedValue");
+const themeSwatchAccentValue = document.getElementById(
+  "themeSwatchAccentValue",
+);
+const themeSwatchAccent2Value = document.getElementById(
+  "themeSwatchAccent2Value",
+);
+const themeSwatchLineValue = document.getElementById("themeSwatchLineValue");
+const themeHexValueElements = [
+  themeSwatchBgValue,
+  themeSwatchCardValue,
+  themeSwatchCardStrongValue,
+  themeSwatchTextValue,
+  themeSwatchMutedValue,
+  themeSwatchAccentValue,
+  themeSwatchAccent2Value,
+  themeSwatchLineValue,
+];
 
 const HISTORY_KEY = "bibleVerseHistory";
 const FAVORITES_KEY = "bibleVerseFavorites";
+const CUSTOM_TOPICS_KEY = "bibleCustomTopics";
+const READING_MODE_KEY = "bibleReadingMode";
+const FOCUS_MODE_KEY = "bibleFocusMode";
+const SPACING_MODE_KEY = "bibleSpacingMode";
+const THEME_KEY = "bibleTheme";
 const ALLOWED_TRANSLATIONS = new Set(["web", "kjv", "asv", "bbe"]);
+const ALLOWED_READING_MODES = new Set(["compact", "comfortable"]);
+const ALLOWED_SPACING_MODES = new Set(["normal", "relaxed"]);
+let themeHexCopyStatusTimer = null;
+
+const DEFAULT_THEME = {
+  bg: "#f4efe4",
+  card: "#fffcf5",
+  cardStrong: "#fffaf1",
+  text: "#201c17",
+  muted: "#655f55",
+  accent: "#8c4a2f",
+  accent2: "#315e49",
+  line: "#dfd1bb",
+};
+
+const PRESET_THEMES = {
+  warm: {
+    ...DEFAULT_THEME,
+  },
+  forest: {
+    bg: "#edf1ea",
+    card: "#f9fcf8",
+    cardStrong: "#f4f9f2",
+    text: "#1f271f",
+    muted: "#50604f",
+    accent: "#4f6d45",
+    accent2: "#315e49",
+    line: "#cdd8c6",
+  },
+  ocean: {
+    bg: "#e9f1f4",
+    card: "#f7fcff",
+    cardStrong: "#eff7fb",
+    text: "#18222a",
+    muted: "#4d6170",
+    accent: "#2f628c",
+    accent2: "#2d6d76",
+    line: "#c6d8e2",
+  },
+  contrast: {
+    bg: "#f1f1f1",
+    card: "#ffffff",
+    cardStrong: "#ffffff",
+    text: "#111111",
+    muted: "#393939",
+    accent: "#8b2d00",
+    accent2: "#004c43",
+    line: "#bdbdbd",
+  },
+};
 
 const BOOKS = [
   { name: "Genesis", chapters: 50 },
@@ -89,6 +232,506 @@ const BOOKS = [
 let history = loadSaved(HISTORY_KEY);
 let favorites = loadSaved(FAVORITES_KEY);
 let lastResult = null;
+let availableTopics = [];
+let builtinTopics = [];
+let customTopics = loadCustomTopics();
+let editingCustomTopicId = "";
+let readingMode = loadReadingMode();
+let focusMode = loadFocusMode();
+let spacingMode = loadSpacingMode();
+let theme = loadTheme();
+let themeLiveSyncTimer = null;
+let activeThemeColorInput = null;
+let savedUndoSnapshot = null;
+let savedUndoTimer = null;
+const SAVED_UNDO_TIMEOUT_MS = 6000;
+
+function normalizeHexColor(value, fallback) {
+  const color = String(value || "").trim();
+  return /^#[0-9a-f]{6}$/i.test(color) ? color.toLowerCase() : fallback;
+}
+
+function loadTheme() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(THEME_KEY) || "null");
+    if (!raw || typeof raw !== "object") {
+      return { ...DEFAULT_THEME };
+    }
+
+    return {
+      bg: normalizeHexColor(raw.bg, DEFAULT_THEME.bg),
+      card: normalizeHexColor(raw.card, DEFAULT_THEME.card),
+      cardStrong: normalizeHexColor(raw.cardStrong, DEFAULT_THEME.cardStrong),
+      text: normalizeHexColor(raw.text, DEFAULT_THEME.text),
+      muted: normalizeHexColor(raw.muted, DEFAULT_THEME.muted),
+      accent: normalizeHexColor(raw.accent, DEFAULT_THEME.accent),
+      accent2: normalizeHexColor(raw.accent2, DEFAULT_THEME.accent2),
+      line: normalizeHexColor(raw.line, DEFAULT_THEME.line),
+    };
+  } catch {
+    return { ...DEFAULT_THEME };
+  }
+}
+
+function themesEqual(a, b) {
+  return (
+    a.bg === b.bg &&
+    a.card === b.card &&
+    a.cardStrong === b.cardStrong &&
+    a.text === b.text &&
+    a.muted === b.muted &&
+    a.accent === b.accent &&
+    a.accent2 === b.accent2 &&
+    a.line === b.line
+  );
+}
+
+function inferThemePreset(themeValue) {
+  if (themesEqual(themeValue, PRESET_THEMES.warm)) {
+    return "warm";
+  }
+  if (themesEqual(themeValue, PRESET_THEMES.forest)) {
+    return "forest";
+  }
+  if (themesEqual(themeValue, PRESET_THEMES.ocean)) {
+    return "ocean";
+  }
+  if (themesEqual(themeValue, PRESET_THEMES.contrast)) {
+    return "contrast";
+  }
+  return "custom";
+}
+
+function syncThemeInputs(themeValue) {
+  if (themeBgInput) {
+    themeBgInput.value = themeValue.bg;
+  }
+  if (themeCardInput) {
+    themeCardInput.value = themeValue.card;
+  }
+  if (themeCardStrongInput) {
+    themeCardStrongInput.value = themeValue.cardStrong;
+  }
+  if (themeTextInput) {
+    themeTextInput.value = themeValue.text;
+  }
+  if (themeMutedInput) {
+    themeMutedInput.value = themeValue.muted;
+  }
+  if (themeAccentInput) {
+    themeAccentInput.value = themeValue.accent;
+  }
+  if (themeAccent2Input) {
+    themeAccent2Input.value = themeValue.accent2;
+  }
+  if (themeLineInput) {
+    themeLineInput.value = themeValue.line;
+  }
+  if (themePresetSelect) {
+    themePresetSelect.value = inferThemePreset(themeValue);
+  }
+}
+
+function setThemeStatus(text) {
+  if (!themeStatus) {
+    return;
+  }
+  themeStatus.textContent = text;
+}
+
+function updateThemePreview(themeValue) {
+  const previewPairs = [
+    [themeSwatchBg, themeSwatchBgValue, themeValue.bg],
+    [themeSwatchCard, themeSwatchCardValue, themeValue.card],
+    [themeSwatchCardStrong, themeSwatchCardStrongValue, themeValue.cardStrong],
+    [themeSwatchText, themeSwatchTextValue, themeValue.text],
+    [themeSwatchMuted, themeSwatchMutedValue, themeValue.muted],
+    [themeSwatchAccent, themeSwatchAccentValue, themeValue.accent],
+    [themeSwatchAccent2, themeSwatchAccent2Value, themeValue.accent2],
+    [themeSwatchLine, themeSwatchLineValue, themeValue.line],
+  ];
+
+  previewPairs.forEach(([chipElement, valueElement, colorValue]) => {
+    if (chipElement) {
+      chipElement.style.backgroundColor = colorValue;
+      chipElement.setAttribute("title", colorValue);
+      chipElement.setAttribute("aria-label", colorValue);
+    }
+    if (valueElement) {
+      valueElement.textContent = colorValue;
+    }
+  });
+}
+
+async function copyTextToClipboard(text) {
+  const value = String(text || "").trim();
+  if (!value) {
+    return false;
+  }
+
+  if (navigator?.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(value);
+      return true;
+    } catch {
+      // Fall back to the legacy copy approach.
+    }
+  }
+
+  const textarea = document.createElement("textarea");
+  textarea.value = value;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    return document.execCommand("copy");
+  } catch {
+    return false;
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
+function setupThemeHexCopy() {
+  themeHexValueElements.forEach((valueElement) => {
+    if (!valueElement) {
+      return;
+    }
+
+    valueElement.tabIndex = 0;
+    valueElement.setAttribute("role", "button");
+    valueElement.setAttribute("title", "Click to copy hex value");
+    valueElement.setAttribute("aria-label", "Copy hex value");
+
+    const copyHexValue = async () => {
+      const colorValue = String(valueElement.textContent || "").trim();
+      if (!colorValue) {
+        return;
+      }
+
+      const didCopy = await copyTextToClipboard(colorValue);
+      setThemeStatus(
+        didCopy ? `Copied ${colorValue}` : "Could not copy color.",
+      );
+
+      if (themeHexCopyStatusTimer) {
+        window.clearTimeout(themeHexCopyStatusTimer);
+      }
+
+      if (didCopy) {
+        themeHexCopyStatusTimer = window.setTimeout(() => {
+          if (
+            themeStatus &&
+            themeStatus.textContent === `Copied ${colorValue}`
+          ) {
+            setThemeStatus("Theme ready.");
+          }
+          themeHexCopyStatusTimer = null;
+        }, 1400);
+      }
+    };
+
+    valueElement.addEventListener("click", () => {
+      void copyHexValue();
+    });
+
+    valueElement.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        void copyHexValue();
+      }
+    });
+  });
+}
+
+function darkenHex(hex, amount) {
+  const h = hex.replace("#", "");
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  const r = Math.max(0, parseInt(full.slice(0, 2), 16) - amount);
+  const g = Math.max(0, parseInt(full.slice(2, 4), 16) - amount);
+  const b = Math.max(0, parseInt(full.slice(4, 6), 16) - amount);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+function applyTheme(themeValue, options = {}) {
+  const nextTheme = {
+    bg: normalizeHexColor(themeValue.bg, DEFAULT_THEME.bg),
+    card: normalizeHexColor(themeValue.card, DEFAULT_THEME.card),
+    cardStrong: normalizeHexColor(
+      themeValue.cardStrong,
+      DEFAULT_THEME.cardStrong,
+    ),
+    text: normalizeHexColor(themeValue.text, DEFAULT_THEME.text),
+    muted: normalizeHexColor(themeValue.muted, DEFAULT_THEME.muted),
+    accent: normalizeHexColor(themeValue.accent, DEFAULT_THEME.accent),
+    accent2: normalizeHexColor(themeValue.accent2, DEFAULT_THEME.accent2),
+    line: normalizeHexColor(themeValue.line, DEFAULT_THEME.line),
+  };
+
+  theme = nextTheme;
+
+  const root = document.documentElement;
+  root.style.setProperty("--bg", nextTheme.bg);
+  root.style.setProperty("--card", nextTheme.card);
+  root.style.setProperty("--card-strong", nextTheme.cardStrong);
+  root.style.setProperty("--text", nextTheme.text);
+  root.style.setProperty("--muted", nextTheme.muted);
+  root.style.setProperty("--accent", nextTheme.accent);
+  root.style.setProperty("--accent-2", nextTheme.accent2);
+  root.style.setProperty("--line", nextTheme.line);
+  root.style.setProperty("--accent-soft", `${nextTheme.accent}22`);
+  root.style.setProperty("--btn-bg", darkenHex(nextTheme.bg, 12));
+  root.style.setProperty("--btn-bg-active", darkenHex(nextTheme.bg, 24));
+
+  syncThemeInputs(nextTheme);
+  updateThemePreview(nextTheme);
+
+  try {
+    localStorage.setItem(THEME_KEY, JSON.stringify(nextTheme));
+  } catch {
+    // Ignore local storage write failures.
+  }
+
+  if (!options.silent) {
+    setThemeStatus("Theme updated.");
+  }
+}
+
+function applyThemePreset(presetId) {
+  const preset = PRESET_THEMES[presetId] || PRESET_THEMES.warm;
+  applyTheme(preset);
+  setThemeStatus("Preset applied.");
+}
+
+function updateThemeFromInputs() {
+  const nextTheme = {
+    bg: themeBgInput?.value,
+    card: themeCardInput?.value,
+    cardStrong: themeCardStrongInput?.value,
+    text: themeTextInput?.value,
+    muted: themeMutedInput?.value,
+    accent: themeAccentInput?.value,
+    accent2: themeAccent2Input?.value,
+    line: themeLineInput?.value,
+  };
+
+  applyTheme(nextTheme);
+}
+
+function stopThemeColorLiveSync() {
+  if (themeLiveSyncTimer) {
+    window.clearInterval(themeLiveSyncTimer);
+    themeLiveSyncTimer = null;
+  }
+  activeThemeColorInput = null;
+}
+
+function startThemeColorLiveSync(inputElement) {
+  if (!inputElement) {
+    return;
+  }
+
+  activeThemeColorInput = inputElement;
+  let lastValue = inputElement.value;
+
+  if (themeLiveSyncTimer) {
+    window.clearInterval(themeLiveSyncTimer);
+  }
+
+  themeLiveSyncTimer = window.setInterval(() => {
+    if (!activeThemeColorInput) {
+      stopThemeColorLiveSync();
+      return;
+    }
+
+    const currentValue = activeThemeColorInput.value;
+    if (currentValue !== lastValue) {
+      lastValue = currentValue;
+      updateThemeFromInputs();
+    }
+  }, 80);
+}
+
+function resetTheme() {
+  applyTheme(DEFAULT_THEME);
+  setThemeStatus("Theme reset to default.");
+}
+
+function exportTheme() {
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 1,
+    theme,
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const dateTag = new Date().toISOString().slice(0, 10);
+
+  link.href = url;
+  link.download = `bible-theme-${dateTag}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+
+  setThemeStatus("Theme exported.");
+}
+
+async function importThemeFromFile(event) {
+  const inputElement = event.target;
+  const file = inputElement.files && inputElement.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const candidateTheme =
+      parsed && typeof parsed === "object" && parsed.theme
+        ? parsed.theme
+        : parsed;
+
+    if (!candidateTheme || typeof candidateTheme !== "object") {
+      setThemeStatus("Invalid theme file.");
+      return;
+    }
+
+    applyTheme(candidateTheme);
+    setThemeStatus("Theme imported.");
+  } catch {
+    setThemeStatus("Could not import theme. Use a valid JSON file.");
+  } finally {
+    inputElement.value = "";
+  }
+}
+
+function loadReadingMode() {
+  try {
+    const value = String(localStorage.getItem(READING_MODE_KEY) || "")
+      .trim()
+      .toLowerCase();
+    return ALLOWED_READING_MODES.has(value) ? value : "comfortable";
+  } catch {
+    return "comfortable";
+  }
+}
+
+function loadFocusMode() {
+  try {
+    return localStorage.getItem(FOCUS_MODE_KEY) === "on" ? "on" : "off";
+  } catch {
+    return "off";
+  }
+}
+
+function loadSpacingMode() {
+  try {
+    const value = String(localStorage.getItem(SPACING_MODE_KEY) || "")
+      .trim()
+      .toLowerCase();
+    return ALLOWED_SPACING_MODES.has(value) ? value : "normal";
+  } catch {
+    return "normal";
+  }
+}
+
+function updateReadingModeButtons() {
+  const isCompact = readingMode === "compact";
+
+  if (compactModeBtn) {
+    compactModeBtn.classList.toggle("reading-mode-btn-active", isCompact);
+    compactModeBtn.setAttribute("aria-pressed", String(isCompact));
+  }
+
+  if (comfortableModeBtn) {
+    comfortableModeBtn.classList.toggle("reading-mode-btn-active", !isCompact);
+    comfortableModeBtn.setAttribute("aria-pressed", String(!isCompact));
+  }
+}
+
+function applyReadingMode(mode) {
+  const normalizedMode = ALLOWED_READING_MODES.has(mode) ? mode : "comfortable";
+
+  readingMode = normalizedMode;
+  document.body.dataset.readingMode = normalizedMode;
+  try {
+    localStorage.setItem(READING_MODE_KEY, normalizedMode);
+  } catch {
+    // Ignore storage write failures and still apply the mode locally.
+  }
+  updateReadingModeButtons();
+}
+
+function updateFocusModeButton() {
+  if (!focusModeBtn) {
+    return;
+  }
+
+  const isFocused = focusMode === "on";
+  focusModeBtn.classList.toggle("focus-mode-btn-active", isFocused);
+  focusModeBtn.setAttribute("aria-pressed", String(isFocused));
+  focusModeBtn.textContent = isFocused ? "Exit Focus" : "Focus Reading";
+}
+
+function applyFocusMode(mode) {
+  focusMode = mode === "on" ? "on" : "off";
+  document.body.dataset.focusMode = focusMode;
+  try {
+    localStorage.setItem(FOCUS_MODE_KEY, focusMode);
+  } catch {
+    // Ignore storage failures and still apply the mode locally.
+  }
+  updateFocusModeButton();
+}
+
+function toggleFocusMode() {
+  applyFocusMode(focusMode === "on" ? "off" : "on");
+}
+
+function updateSpacingModeButton() {
+  if (!spacingModeBtn) {
+    return;
+  }
+
+  const isRelaxed = spacingMode === "relaxed";
+  spacingModeBtn.classList.toggle("spacing-mode-btn-active", isRelaxed);
+  spacingModeBtn.setAttribute("aria-pressed", String(isRelaxed));
+  spacingModeBtn.textContent = isRelaxed
+    ? "Relaxed Spacing: On"
+    : "Relaxed Spacing";
+}
+
+function applySpacingMode(mode) {
+  spacingMode = ALLOWED_SPACING_MODES.has(mode) ? mode : "normal";
+  document.body.dataset.spacingMode = spacingMode;
+
+  try {
+    localStorage.setItem(SPACING_MODE_KEY, spacingMode);
+  } catch {
+    // Ignore storage failures and still apply the mode locally.
+  }
+
+  updateSpacingModeButton();
+}
+
+function toggleSpacingMode() {
+  applySpacingMode(spacingMode === "relaxed" ? "normal" : "relaxed");
+}
 
 function loadSaved(key) {
   try {
@@ -103,6 +746,285 @@ function loadSaved(key) {
   } catch {
     return [];
   }
+}
+
+function loadCustomTopics() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(CUSTOM_TOPICS_KEY) || "[]");
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed
+      .filter((item) => item && typeof item === "object")
+      .map((item) => ({
+        id: String(item.id || "").trim(),
+        name: String(item.name || "").trim(),
+        description: String(item.description || "").trim(),
+        references: Array.isArray(item.references)
+          ? item.references
+              .map((ref) => normalizeReference(ref))
+              .filter(Boolean)
+          : [],
+        custom: true,
+      }))
+      .filter(
+        (item) =>
+          /^custom-[a-z0-9-]{2,40}$/i.test(item.id) &&
+          item.name &&
+          item.references.length,
+      );
+  } catch {
+    return [];
+  }
+}
+
+function saveCustomTopics() {
+  const payload = customTopics.map((topic) => ({
+    id: topic.id,
+    name: topic.name,
+    description: topic.description,
+    references: topic.references,
+  }));
+  localStorage.setItem(CUSTOM_TOPICS_KEY, JSON.stringify(payload));
+}
+
+function normalizeImportedCustomTopic(item) {
+  if (!item || typeof item !== "object") {
+    return null;
+  }
+
+  const name = sanitizeTopicName(item.name || "");
+  if (!name) {
+    return null;
+  }
+
+  const description = sanitizeTopicDescription(item.description || "");
+  const references = Array.isArray(item.references)
+    ? item.references.map((ref) => normalizeReference(ref)).filter(Boolean)
+    : [];
+
+  if (!references.length) {
+    return null;
+  }
+
+  const idBase = name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .slice(0, 30);
+
+  return {
+    id: `custom-${idBase || "topic"}-${Math.random().toString(36).slice(2, 8)}`,
+    name,
+    description,
+    references: references.slice(0, 20),
+    custom: true,
+  };
+}
+
+function sanitizeTopicName(name) {
+  return String(name || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 60);
+}
+
+function sanitizeTopicDescription(description) {
+  return String(description || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 160);
+}
+
+function parseTopicReferences(value) {
+  const pieces = String(value || "")
+    .split(/\n|,/g)
+    .map((item) => normalizeReference(item))
+    .filter(Boolean);
+
+  const deduped = [];
+  const seen = new Set();
+  pieces.forEach((item) => {
+    const key = item.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduped.push(item);
+    }
+  });
+  return deduped.slice(0, 20);
+}
+
+function setCustomTopicStatus(text, isError = false) {
+  if (!customTopicStatus) {
+    return;
+  }
+  customTopicStatus.textContent = text;
+  customTopicStatus.className = isError ? "error" : "meta";
+}
+
+function updateCustomEditorState() {
+  if (saveCustomTopicBtn) {
+    saveCustomTopicBtn.textContent = editingCustomTopicId
+      ? "Update Custom Topic"
+      : "Save Custom Topic";
+  }
+
+  if (cancelCustomTopicEditBtn) {
+    cancelCustomTopicEditBtn.style.display = editingCustomTopicId
+      ? "inline-flex"
+      : "none";
+  }
+
+  if (customEditorState) {
+    if (editingCustomTopicId) {
+      const topic = customTopics.find(
+        (item) => item.id === editingCustomTopicId,
+      );
+      customEditorState.textContent = topic
+        ? `Editing custom topic: ${topic.name}`
+        : "Editing custom topic.";
+    } else {
+      customEditorState.textContent = "Creating a new custom topic.";
+    }
+  }
+}
+
+function beginCustomTopicEdit(topicId) {
+  const topic = customTopics.find((item) => item.id === topicId);
+  if (!topic) {
+    setCustomTopicStatus("That custom topic was not found.", true);
+    return;
+  }
+
+  editingCustomTopicId = topic.id;
+  if (customTopicName) {
+    customTopicName.value = topic.name;
+  }
+  if (customTopicDescription) {
+    customTopicDescription.value = topic.description;
+  }
+  if (customTopicRefs) {
+    customTopicRefs.value = topic.references.join("\n");
+  }
+  if (topicSelect) {
+    topicSelect.value = topic.id;
+  }
+
+  updateCustomEditorState();
+  setCustomTopicStatus("Loaded custom topic into the editor.");
+}
+
+function dedupeTopics(topics) {
+  const deduped = [];
+  const seen = new Set();
+
+  topics.forEach((topic) => {
+    const key = `${String(topic.name || "").toLowerCase()}|${Array.isArray(topic.references) ? topic.references.join("|").toLowerCase() : ""}`;
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduped.push(topic);
+    }
+  });
+
+  return deduped;
+}
+
+function getReplaceConfirmationText() {
+  return String(replaceConfirmInput?.value || "").trim();
+}
+
+function canOpenImportPicker() {
+  if (!replaceCustomTopicsMode?.checked) {
+    return true;
+  }
+
+  return getReplaceConfirmationText() === "REPLACE";
+}
+
+function syncImportControlState() {
+  const enabled = canOpenImportPicker();
+
+  if (importCustomTopicsInput) {
+    importCustomTopicsInput.disabled = !enabled;
+  }
+
+  if (importCustomTopicsLabel) {
+    importCustomTopicsLabel.classList.toggle("file-btn-disabled", !enabled);
+    importCustomTopicsLabel.setAttribute("aria-disabled", String(!enabled));
+    importCustomTopicsLabel.title = enabled
+      ? "Import topics from a JSON file"
+      : "Type REPLACE exactly to enable destructive import";
+  }
+}
+
+function renderCustomTopicList() {
+  if (!customTopicList) {
+    return;
+  }
+
+  customTopicList.textContent = "";
+
+  if (!customTopics.length) {
+    const li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "No custom topics yet.";
+    customTopicList.appendChild(li);
+    return;
+  }
+
+  customTopics.forEach((topic, index) => {
+    const li = document.createElement("li");
+    li.className = "custom-topic-row";
+
+    const main = document.createElement("div");
+    main.className = "custom-topic-main";
+
+    const useBtn = document.createElement("button");
+    useBtn.type = "button";
+    useBtn.className = "outline-btn custom-topic-main-btn";
+    useBtn.dataset.customTopicId = topic.id;
+    useBtn.dataset.customTopicAction = "edit";
+    useBtn.textContent = topic.name;
+
+    const refsList = document.createElement("ul");
+    refsList.className = "custom-topic-ref-list";
+    topic.references.forEach((reference) => {
+      const item = document.createElement("li");
+      item.textContent = reference;
+      refsList.appendChild(item);
+    });
+
+    const controls = document.createElement("div");
+    controls.className = "custom-topic-controls";
+
+    const upBtn = document.createElement("button");
+    upBtn.type = "button";
+    upBtn.className = "outline-btn custom-topic-move-btn";
+    upBtn.dataset.customTopicId = topic.id;
+    upBtn.dataset.customTopicAction = "move-up";
+    upBtn.textContent = "↑";
+    upBtn.disabled = index === 0;
+    upBtn.setAttribute("aria-label", `Move ${topic.name} up`);
+
+    const downBtn = document.createElement("button");
+    downBtn.type = "button";
+    downBtn.className = "outline-btn custom-topic-move-btn";
+    downBtn.dataset.customTopicId = topic.id;
+    downBtn.dataset.customTopicAction = "move-down";
+    downBtn.textContent = "↓";
+    downBtn.disabled = index === customTopics.length - 1;
+    downBtn.setAttribute("aria-label", `Move ${topic.name} down`);
+
+    controls.appendChild(upBtn);
+    controls.appendChild(downBtn);
+    main.appendChild(useBtn);
+    main.appendChild(refsList);
+    li.appendChild(main);
+    li.appendChild(controls);
+    customTopicList.appendChild(li);
+  });
 }
 
 function saveSaved(key, value) {
@@ -148,6 +1070,93 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
+}
+
+function normalizeOpinionSubject(value) {
+  const normalized = String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, 140);
+
+  return /^[a-z0-9\s,.:;\-?'"()!/&]+$/i.test(normalized) ? normalized : "";
+}
+
+function clearOpinionLinks() {
+  if (!opinionLinksBox) {
+    return;
+  }
+  opinionLinksBox.textContent = "";
+}
+
+function renderOpinionLinks(subject) {
+  if (!opinionLinksBox) {
+    return;
+  }
+
+  opinionLinksBox.textContent = "";
+  const safeSubject = normalizeOpinionSubject(subject);
+
+  if (!safeSubject) {
+    const helper = document.createElement("div");
+    helper.className = "meta";
+    helper.textContent = "Enter a valid Bible-related subject to search.";
+    opinionLinksBox.appendChild(helper);
+    return;
+  }
+
+  const queryBase = `${safeSubject} Bible Christian viewpoints`;
+  const searches = [
+    {
+      label: "DuckDuckGo: Diverse discussions",
+      href: `https://duckduckgo.com/?q=${encodeURIComponent(queryBase)}`,
+    },
+    {
+      label: "Google: Articles and commentary",
+      href: `https://www.google.com/search?q=${encodeURIComponent(queryBase)}`,
+    },
+    {
+      label: "Bing: News and long-form resources",
+      href: `https://www.bing.com/search?q=${encodeURIComponent(queryBase)}`,
+    },
+    {
+      label: "Reddit: Community discussion threads",
+      href: `https://www.reddit.com/search/?q=${encodeURIComponent(`${safeSubject} Bible`)}`,
+    },
+    {
+      label: "YouTube: Debates and teaching videos",
+      href: `https://www.youtube.com/results?search_query=${encodeURIComponent(`${safeSubject} Bible debate`)}`,
+    },
+  ];
+
+  searches.forEach((item) => {
+    const link = document.createElement("a");
+    link.className = "opinion-link";
+    link.href = item.href;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = item.label;
+    opinionLinksBox.appendChild(link);
+  });
+
+  const helper = document.createElement("div");
+  helper.className = "meta";
+  helper.textContent = `Showing web search sources for: ${safeSubject}`;
+  opinionLinksBox.appendChild(helper);
+}
+
+function searchOpinionSubject() {
+  const subject = normalizeOpinionSubject(opinionSubjectInput?.value || "");
+
+  if (!subject) {
+    renderOpinionLinks("");
+    return;
+  }
+
+  if (opinionSubjectInput) {
+    opinionSubjectInput.value = subject;
+  }
+
+  renderOpinionLinks(subject);
 }
 
 function populateBookSelect() {
@@ -219,6 +1228,7 @@ async function syncVerseDropdown() {
 
 function renderVerse(payload) {
   resultBox.innerHTML = `
+    <h2 class="result-heading">Verse Result</h2>
     <div class="reference">${escapeHtml(payload.canonicalReference)}</div>
     <div class="text">${escapeHtml(payload.text)}</div>
     <div class="meta">Translation: ${escapeHtml(payload.translation || "Unknown")}</div>
@@ -226,7 +1236,10 @@ function renderVerse(payload) {
 }
 
 function renderError(message) {
-  resultBox.innerHTML = `<div class="error">${escapeHtml(message)}</div>`;
+  resultBox.innerHTML = `
+    <h2 class="result-heading">Verse Result</h2>
+    <div class="error">${escapeHtml(message)}</div>
+  `;
 }
 
 function setAdminStatusBadge(text, statusClass) {
@@ -268,6 +1281,678 @@ async function parseJsonSafe(response) {
   } catch {
     return null;
   }
+}
+
+function renderTopicResults(payload) {
+  if (!topicResultsBox) {
+    return;
+  }
+
+  const topicName = escapeHtml(payload.topic?.name || "Topic");
+  const topicDescription = escapeHtml(payload.topic?.description || "");
+  const verses = Array.isArray(payload.verses) ? payload.verses : [];
+
+  if (verses.length === 0) {
+    topicResultsBox.innerHTML = `
+      <h2 class="result-heading">Topic Passages</h2>
+      <div class="reference">${topicName}</div>
+      <div class="meta">${topicDescription}</div>
+      <div class="meta">No verses were found for this topic in the selected translation.</div>
+    `;
+    return;
+  }
+
+  const listHtml = verses
+    .map((verse, index) => {
+      const ref = escapeHtml(
+        verse.canonicalReference || verse.query || "Unknown reference",
+      );
+      return `
+        <article class="topic-item">
+          <a
+            href="#"
+            class="topic-ref-link"
+            data-topic-reference="${ref}"
+            data-topic-index="${index}"
+          >
+            ${ref}
+          </a>
+        </article>
+      `;
+    })
+    .join("");
+
+  topicResultsBox.innerHTML = `
+    <h2 class="result-heading">Topic Passages</h2>
+    <div class="reference">${topicName}</div>
+    <div class="meta">${topicDescription}</div>
+    <div class="topic-result-list">${listHtml}</div>
+  `;
+}
+
+function populateTopicSelect(topics) {
+  if (!topicSelect) {
+    return;
+  }
+
+  const selected = topicSelect.value;
+  topicSelect.innerHTML = '<option value="">Select a Bible subject...</option>';
+
+  topics.forEach((topic) => {
+    const option = document.createElement("option");
+    option.value = topic.id;
+    option.textContent = topic.name;
+    topicSelect.appendChild(option);
+  });
+
+  if (selected && topics.some((topic) => topic.id === selected)) {
+    topicSelect.value = selected;
+  }
+}
+
+function resetTopicSelectToPrompt() {
+  if (!topicSelect) {
+    return;
+  }
+
+  if (Array.from(topicSelect.options).some((option) => option.value === "")) {
+    topicSelect.value = "";
+    return;
+  }
+
+  const promptOption = document.createElement("option");
+  promptOption.value = "";
+  promptOption.textContent = "Select a Bible subject...";
+  topicSelect.prepend(promptOption);
+  topicSelect.value = "";
+}
+
+function getFilteredTopics(filterValue = "") {
+  const q = String(filterValue || "")
+    .trim()
+    .toLowerCase();
+  const merged = [...builtinTopics, ...customTopics];
+
+  if (!q) {
+    return merged;
+  }
+
+  return merged.filter((topic) => {
+    return (
+      String(topic.name || "")
+        .toLowerCase()
+        .includes(q) ||
+      String(topic.description || "")
+        .toLowerCase()
+        .includes(q)
+    );
+  });
+}
+
+async function loadTopics(filterValue = "") {
+  if (!topicSelect) {
+    return;
+  }
+
+  try {
+    const response = await fetch("/api/topics");
+    const payload = await parseJsonSafe(response);
+
+    if (!response.ok || !payload || !Array.isArray(payload.topics)) {
+      return;
+    }
+
+    builtinTopics = payload.topics.map((topic) => ({
+      id: topic.id,
+      name: topic.name,
+      description: topic.description,
+      custom: false,
+    }));
+
+    availableTopics = getFilteredTopics(filterValue);
+    populateTopicSelect(availableTopics);
+  } catch {
+    availableTopics = getFilteredTopics(filterValue);
+    populateTopicSelect(availableTopics);
+  }
+}
+
+async function loadTopicVerses() {
+  if (!topicSelect || !topicResultsBox) {
+    return;
+  }
+
+  const topicId = String(topicSelect.value || "").trim();
+  const translation = normalizeTranslation(translationSelect.value);
+
+  if (!topicId) {
+    topicResultsBox.innerHTML =
+      '<h2 class="result-heading">Topic Passages</h2><div class="error">Please select a topic first.</div>';
+    return;
+  }
+
+  topicResultsBox.innerHTML =
+    '<h2 class="result-heading">Topic Passages</h2><div class="meta">Loading topic passages...</div>';
+
+  resetTopicSelectToPrompt();
+
+  const selectedCustomTopic = customTopics.find(
+    (topic) => topic.id === topicId,
+  );
+
+  if (selectedCustomTopic) {
+    try {
+      const results = await Promise.all(
+        selectedCustomTopic.references.map(async (reference) => {
+          const response = await fetch(
+            `/api/verse?reference=${encodeURIComponent(reference)}&translation=${encodeURIComponent(translation)}`,
+          );
+          const payload = await parseJsonSafe(response);
+          if (!response.ok || !payload) {
+            return null;
+          }
+          return {
+            query: reference,
+            canonicalReference: payload.canonicalReference,
+            translation: payload.translation,
+            translationId: payload.translationId,
+            text: payload.text,
+          };
+        }),
+      );
+
+      renderTopicResults({
+        topic: {
+          id: selectedCustomTopic.id,
+          name: selectedCustomTopic.name,
+          description: selectedCustomTopic.description,
+        },
+        verses: results.filter(Boolean),
+      });
+      return;
+    } catch (error) {
+      topicResultsBox.innerHTML = `<h2 class="result-heading">Topic Passages</h2><div class="error">${escapeHtml(`Network error. ${error.message || "Please try again."}`)}</div>`;
+      return;
+    }
+  }
+
+  try {
+    const response = await fetch(
+      `/api/topic-verses?topic=${encodeURIComponent(topicId)}&translation=${encodeURIComponent(translation)}`,
+    );
+    const payload = await parseJsonSafe(response);
+
+    if (!response.ok || !payload) {
+      const message =
+        (payload && payload.error) ||
+        `Topic request failed (HTTP ${response.status}). Please try again.`;
+      topicResultsBox.innerHTML = `<h2 class="result-heading">Topic Passages</h2><div class="error">${escapeHtml(message)}</div>`;
+      return;
+    }
+
+    renderTopicResults(payload);
+  } catch (error) {
+    topicResultsBox.innerHTML = `<h2 class="result-heading">Topic Passages</h2><div class="error">${escapeHtml(`Network error. ${error.message || "Please try again."}`)}</div>`;
+  }
+}
+
+async function searchBibleSubject() {
+  if (!bibleSubjectInput || !topicResultsBox) {
+    return;
+  }
+
+  const searchQuery = String(bibleSubjectInput.value || "").trim();
+  const translation = normalizeTranslation(translationSelect.value);
+
+  if (!searchQuery) {
+    topicResultsBox.innerHTML =
+      '<h2 class="result-heading">Bible Subject Search</h2><div class="error">Please enter a subject to search.</div>';
+    return;
+  }
+
+  topicResultsBox.innerHTML =
+    '<h2 class="result-heading">Bible Subject Search</h2><div class="meta">Searching Bible topics for "' +
+    escapeHtml(searchQuery) +
+    '"...</div>';
+
+  try {
+    // Fetch all available topics
+    const topicsResponse = await fetch("/api/topics");
+    const topicsPayload = await parseJsonSafe(topicsResponse);
+
+    if (
+      !topicsResponse.ok ||
+      !topicsPayload ||
+      !Array.isArray(topicsPayload.topics)
+    ) {
+      topicResultsBox.innerHTML = `<h2 class="result-heading">Bible Subject Search</h2><div class="error">Could not fetch topics. Please try again.</div>`;
+      return;
+    }
+
+    // Filter topics by keyword match
+    const queryLower = searchQuery.toLowerCase();
+    const matchingTopics = topicsPayload.topics.filter((topic) => {
+      return (
+        topic.name.toLowerCase().includes(queryLower) ||
+        topic.description.toLowerCase().includes(queryLower)
+      );
+    });
+
+    if (matchingTopics.length === 0) {
+      topicResultsBox.innerHTML = `<h2 class="result-heading">Bible Subject Search</h2><div class="meta">No Bible topics match "${escapeHtml(searchQuery)}". Try a different search term.</div>`;
+      return;
+    }
+
+    // Fetch verses for all matching topics and group by topic
+    const topicResults = [];
+
+    for (const topic of matchingTopics) {
+      try {
+        const verseResponse = await fetch(
+          `/api/topic-verses?topic=${encodeURIComponent(topic.id)}&translation=${encodeURIComponent(translation)}`,
+        );
+        const versePayload = await parseJsonSafe(verseResponse);
+
+        if (
+          verseResponse.ok &&
+          versePayload &&
+          versePayload.verses &&
+          versePayload.verses.length > 0
+        ) {
+          topicResults.push({
+            topic,
+            verses: versePayload.verses,
+          });
+        }
+      } catch {
+        // Skip this topic if fetch fails
+      }
+    }
+
+    if (topicResults.length === 0) {
+      topicResultsBox.innerHTML = `<h2 class="result-heading">Bible Subject Search</h2><div class="meta">Topics found but no verses available for "${escapeHtml(searchQuery)}".</div>`;
+      return;
+    }
+
+    // Build HTML with grouped topics and verses
+    let totalVersesCount = 0;
+    const groupsHtml = topicResults
+      .map((result) => {
+        totalVersesCount += result.verses.length;
+        const topicName = escapeHtml(result.topic.name);
+        const topicDesc = escapeHtml(result.topic.description);
+
+        const versesHtml = result.verses
+          .map((verse) => {
+            const ref = escapeHtml(
+              verse.canonicalReference || verse.query || "Unknown",
+            );
+            const text = escapeHtml(verse.text || "");
+            return `
+          <article class="topic-item">
+            <div class="topic-item-reference">${ref}</div>
+            <div class="text">${text}</div>
+          </article>
+        `;
+          })
+          .join("");
+
+        return `
+        <div class="search-result-group">
+          <h3 class="result-heading" style="font-size: 1.1rem; margin-top: 1.2rem; margin-bottom: 0.5rem;">${topicName}</h3>
+          <div class="meta" style="margin-bottom: 1rem;">${topicDesc}</div>
+          <div class="topic-result-list">${versesHtml}</div>
+        </div>
+      `;
+      })
+      .join("");
+
+    const headerHtml = `<h2 class="result-heading">Bible Subject Search: "${escapeHtml(searchQuery)}"</h2><div class="meta">${topicResults.length} topic(s) found with ${totalVersesCount} verse(s).</div>`;
+
+    topicResultsBox.innerHTML = headerHtml + groupsHtml;
+    if (bibleSearchClearBtn) {
+      bibleSearchClearBtn.style.display = "block";
+    }
+  } catch (error) {
+    topicResultsBox.innerHTML = `<h2 class="result-heading">Bible Subject Search</h2><div class="error">${escapeHtml(`Network error. ${error.message || "Please try again."}`)}</div>`;
+    if (bibleSearchClearBtn) {
+      bibleSearchClearBtn.style.display = "block";
+    }
+  }
+}
+
+function clearBibleSearch() {
+  if (!bibleSubjectInput || !topicResultsBox) {
+    return;
+  }
+
+  bibleSubjectInput.value = "";
+  topicResultsBox.innerHTML =
+    '<h2 class="result-heading">Topic Passages</h2><div class="meta">Pick a topic to view related passages.</div>';
+  if (bibleSearchClearBtn) {
+    bibleSearchClearBtn.style.display = "none";
+  }
+  bibleSubjectInput.focus();
+}
+
+function loadTopicVerseFromButton(event) {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) {
+    return;
+  }
+
+  const trigger = target.closest("[data-topic-reference]");
+  if (!(trigger instanceof HTMLElement)) {
+    return;
+  }
+
+  event.preventDefault();
+
+  if (!trigger.dataset.topicReference) {
+    return;
+  }
+
+  input.value = trigger.dataset.topicReference;
+  getVerse();
+}
+
+function clearCustomTopicForm() {
+  if (customTopicName) {
+    customTopicName.value = "";
+  }
+  if (customTopicDescription) {
+    customTopicDescription.value = "";
+  }
+  if (customTopicRefs) {
+    customTopicRefs.value = "";
+  }
+}
+
+function resetCustomTopicEditor() {
+  editingCustomTopicId = "";
+  clearCustomTopicForm();
+  updateCustomEditorState();
+}
+
+function refreshTopicsUi(filterValue = "") {
+  renderCustomTopicList();
+  availableTopics = getFilteredTopics(filterValue);
+  populateTopicSelect(availableTopics);
+  updateCustomEditorState();
+}
+
+function moveCustomTopic(topicId, direction) {
+  const index = customTopics.findIndex((topic) => topic.id === topicId);
+  if (index === -1) {
+    setCustomTopicStatus("That custom topic was not found.", true);
+    return;
+  }
+
+  const targetIndex = direction === "up" ? index - 1 : index + 1;
+  if (targetIndex < 0 || targetIndex >= customTopics.length) {
+    return;
+  }
+
+  const reordered = [...customTopics];
+  const [topic] = reordered.splice(index, 1);
+  reordered.splice(targetIndex, 0, topic);
+  customTopics = reordered;
+  saveCustomTopics();
+  refreshTopicsUi("");
+  if (topicSelect) {
+    topicSelect.value = topicId;
+  }
+  setCustomTopicStatus(
+    `Moved custom topic ${direction === "up" ? "up" : "down"}.`,
+  );
+}
+
+function saveCustomTopic() {
+  const name = sanitizeTopicName(customTopicName?.value || "");
+  const description = sanitizeTopicDescription(
+    customTopicDescription?.value || "",
+  );
+  const references = parseTopicReferences(customTopicRefs?.value || "");
+
+  if (!name) {
+    setCustomTopicStatus("Custom topic name is required.", true);
+    return;
+  }
+
+  if (!references.length) {
+    setCustomTopicStatus("Add at least one valid verse reference.", true);
+    return;
+  }
+
+  let id = editingCustomTopicId;
+
+  if (editingCustomTopicId) {
+    const existingIndex = customTopics.findIndex(
+      (topic) => topic.id === editingCustomTopicId,
+    );
+
+    if (existingIndex === -1) {
+      setCustomTopicStatus("That custom topic was not found.", true);
+      resetCustomTopicEditor();
+      return;
+    }
+
+    customTopics[existingIndex] = {
+      ...customTopics[existingIndex],
+      name,
+      description,
+      references,
+      custom: true,
+    };
+  } else {
+    const idBase = name
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, "")
+      .trim()
+      .replace(/\s+/g, "-")
+      .slice(0, 30);
+    id = `custom-${idBase || "topic"}-${Date.now().toString(36)}`;
+
+    customTopics.unshift({
+      id,
+      name,
+      description,
+      references,
+      custom: true,
+    });
+  }
+
+  customTopics = customTopics.slice(0, 40);
+  saveCustomTopics();
+  refreshTopicsUi("");
+  topicSelect.value = id;
+  setCustomTopicStatus(
+    editingCustomTopicId ? "Custom topic updated." : "Custom topic saved.",
+  );
+  resetCustomTopicEditor();
+}
+
+function cancelCustomTopicEdit() {
+  if (!editingCustomTopicId) {
+    clearCustomTopicForm();
+    setCustomTopicStatus("Editor cleared.");
+    return;
+  }
+
+  resetCustomTopicEditor();
+  setCustomTopicStatus("Edit canceled.");
+}
+
+function deleteSelectedCustomTopic() {
+  if (!topicSelect) {
+    return;
+  }
+
+  const selectedId = String(topicSelect.value || "").trim();
+  if (!selectedId.startsWith("custom-")) {
+    setCustomTopicStatus("Select a custom topic first to delete it.", true);
+    return;
+  }
+
+  const before = customTopics.length;
+  customTopics = customTopics.filter((topic) => topic.id !== selectedId);
+
+  if (customTopics.length === before) {
+    setCustomTopicStatus("That custom topic was not found.", true);
+    return;
+  }
+
+  saveCustomTopics();
+  refreshTopicsUi("");
+  topicResultsBox.innerHTML =
+    '<div class="meta">Pick a topic to view related passages.</div>';
+  if (editingCustomTopicId === selectedId) {
+    resetCustomTopicEditor();
+  }
+  setCustomTopicStatus("Custom topic deleted.");
+}
+
+function exportCustomTopics() {
+  if (!customTopics.length) {
+    setCustomTopicStatus("There are no custom topics to export.", true);
+    return;
+  }
+
+  const payload = {
+    exportedAt: new Date().toISOString(),
+    version: 1,
+    topics: customTopics.map((topic) => ({
+      name: topic.name,
+      description: topic.description,
+      references: topic.references,
+    })),
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  const timestamp = new Date().toISOString().slice(0, 10);
+
+  link.href = url;
+  link.download = `bible-custom-topics-${timestamp}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+
+  setCustomTopicStatus("Custom topics exported.");
+}
+
+async function importCustomTopicsFromFile(event) {
+  const inputElement = event.target;
+  const file = inputElement.files && inputElement.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    const sourceTopics = Array.isArray(parsed)
+      ? parsed
+      : Array.isArray(parsed.topics)
+        ? parsed.topics
+        : null;
+
+    if (!sourceTopics) {
+      setCustomTopicStatus(
+        "Invalid file format. Expected a topics array.",
+        true,
+      );
+      return;
+    }
+
+    const normalized = sourceTopics
+      .map((item) => normalizeImportedCustomTopic(item))
+      .filter(Boolean);
+
+    if (!normalized.length) {
+      setCustomTopicStatus("No valid topics found in that file.", true);
+      return;
+    }
+
+    const shouldReplace = Boolean(replaceCustomTopicsMode?.checked);
+
+    if (shouldReplace) {
+      if (getReplaceConfirmationText() !== "REPLACE") {
+        setCustomTopicStatus(
+          'Type REPLACE exactly to enable "replace existing" import.',
+          true,
+        );
+        return;
+      }
+
+      const confirmed = window.confirm(
+        "Replace all existing custom topics with imported topics? This cannot be undone.",
+      );
+
+      if (!confirmed) {
+        setCustomTopicStatus("Import canceled.");
+        return;
+      }
+    }
+
+    const candidateTopics = shouldReplace
+      ? normalized
+      : [...normalized, ...customTopics];
+    const deduped = dedupeTopics(candidateTopics);
+    const previousCount = customTopics.length;
+
+    customTopics = deduped.slice(0, 40);
+    saveCustomTopics();
+    refreshTopicsUi("");
+
+    if (shouldReplace) {
+      setCustomTopicStatus(
+        `Replaced ${previousCount} topic(s) with ${customTopics.length} imported topic(s).`,
+      );
+      if (replaceConfirmInput) {
+        replaceConfirmInput.value = "";
+      }
+    } else {
+      setCustomTopicStatus(`Imported ${normalized.length} topic(s).`);
+    }
+  } catch {
+    setCustomTopicStatus(
+      "Could not read that file. Make sure it is valid JSON.",
+      true,
+    );
+  } finally {
+    inputElement.value = "";
+  }
+}
+
+function selectCustomTopicFromList(event) {
+  const target = event.target;
+  if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const customId = String(target.dataset.customTopicId || "").trim();
+  const action = String(target.dataset.customTopicAction || "edit").trim();
+  if (!customId) {
+    return;
+  }
+
+  if (action === "move-up") {
+    moveCustomTopic(customId, "up");
+    return;
+  }
+
+  if (action === "move-down") {
+    moveCustomTopic(customId, "down");
+    return;
+  }
+
+  beginCustomTopicEdit(customId);
 }
 
 function addHistory(reference, translation) {
@@ -318,42 +2003,229 @@ function addFavorite() {
   renderSavedLists();
 }
 
+function cloneSavedItems(items) {
+  return Array.isArray(items)
+    ? items.map((item) => ({
+        reference: item.reference,
+        translation: normalizeTranslation(item.translation),
+      }))
+    : [];
+}
+
+function captureSavedSnapshot() {
+  return {
+    history: cloneSavedItems(history),
+    favorites: cloneSavedItems(favorites),
+  };
+}
+
+function hideSavedUndoToast() {
+  if (savedUndoTimer) {
+    window.clearTimeout(savedUndoTimer);
+    savedUndoTimer = null;
+  }
+
+  if (undoToast) {
+    undoToast.classList.remove("undo-toast-show");
+  }
+}
+
+function showSavedUndoToast(message, snapshot) {
+  if (!undoToast || !undoToastText || !undoToastActionBtn) {
+    return;
+  }
+
+  savedUndoSnapshot = snapshot;
+  undoToastText.textContent = message;
+  undoToast.classList.add("undo-toast-show");
+
+  if (savedUndoTimer) {
+    window.clearTimeout(savedUndoTimer);
+  }
+
+  savedUndoTimer = window.setTimeout(() => {
+    savedUndoSnapshot = null;
+    hideSavedUndoToast();
+  }, SAVED_UNDO_TIMEOUT_MS);
+}
+
+function restoreSavedSnapshot(snapshot) {
+  history = cloneSavedItems(snapshot?.history);
+  favorites = cloneSavedItems(snapshot?.favorites);
+  saveSaved(HISTORY_KEY, history);
+  saveSaved(FAVORITES_KEY, favorites);
+  renderSavedLists();
+}
+
+function undoSavedListChange() {
+  if (!savedUndoSnapshot) {
+    hideSavedUndoToast();
+    return;
+  }
+
+  restoreSavedSnapshot(savedUndoSnapshot);
+  savedUndoSnapshot = null;
+  hideSavedUndoToast();
+}
+
+function clearHistory() {
+  if (!history.length) {
+    return;
+  }
+
+  const snapshot = captureSavedSnapshot();
+
+  const confirmed = window.confirm(
+    "Clear all recent searches? This cannot be undone.",
+  );
+  if (!confirmed) {
+    return;
+  }
+
+  history = [];
+  saveSaved(HISTORY_KEY, history);
+  renderSavedLists();
+  showSavedUndoToast("Recent searches cleared.", snapshot);
+}
+
+function clearFavorites() {
+  if (!favorites.length) {
+    return;
+  }
+
+  const snapshot = captureSavedSnapshot();
+
+  const confirmed = window.confirm(
+    "Clear all favorites? This cannot be undone.",
+  );
+  if (!confirmed) {
+    return;
+  }
+
+  favorites = [];
+  saveSaved(FAVORITES_KEY, favorites);
+  renderSavedLists();
+  showSavedUndoToast("Favorites cleared.", snapshot);
+}
+
 function renderSavedLists() {
   historyList.textContent = "";
   favoriteList.textContent = "";
 
   history.forEach((item) => {
     const li = document.createElement("li");
+    li.className = "saved-item-row";
+
     const button = document.createElement("button");
     button.className = "chip";
     button.type = "button";
     button.dataset.reference = item.reference;
     button.dataset.translation = item.translation;
     button.textContent = `${item.reference} (${item.translation.toUpperCase()})`;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "chip-remove-btn";
+    removeBtn.type = "button";
+    removeBtn.dataset.action = "remove-saved";
+    removeBtn.dataset.listType = "history";
+    removeBtn.dataset.reference = item.reference;
+    removeBtn.dataset.translation = item.translation;
+    removeBtn.textContent = "×";
+    removeBtn.setAttribute(
+      "aria-label",
+      `Remove ${item.reference} (${item.translation.toUpperCase()}) from recent searches`,
+    );
+
     li.appendChild(button);
+    li.appendChild(removeBtn);
     historyList.appendChild(li);
   });
 
   favorites.forEach((item) => {
     const li = document.createElement("li");
+    li.className = "saved-item-row";
+
     const button = document.createElement("button");
     button.className = "chip";
     button.type = "button";
     button.dataset.reference = item.reference;
     button.dataset.translation = item.translation;
     button.textContent = `${item.reference} (${item.translation.toUpperCase()})`;
+
+    const removeBtn = document.createElement("button");
+    removeBtn.className = "chip-remove-btn";
+    removeBtn.type = "button";
+    removeBtn.dataset.action = "remove-saved";
+    removeBtn.dataset.listType = "favorites";
+    removeBtn.dataset.reference = item.reference;
+    removeBtn.dataset.translation = item.translation;
+    removeBtn.textContent = "×";
+    removeBtn.setAttribute(
+      "aria-label",
+      `Remove ${item.reference} (${item.translation.toUpperCase()}) from favorites`,
+    );
+
     li.appendChild(button);
+    li.appendChild(removeBtn);
     favoriteList.appendChild(li);
   });
 
   historyEmpty.style.display = history.length ? "none" : "block";
   favoriteEmpty.style.display = favorites.length ? "none" : "block";
+
+  if (clearHistoryBtn) {
+    clearHistoryBtn.disabled = !history.length;
+  }
+
+  if (clearFavoritesBtn) {
+    clearFavoritesBtn.disabled = !favorites.length;
+  }
 }
 
 function applySavedSelection(event) {
   const target = event.target;
 
   if (!(target instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  if (target.dataset.action === "remove-saved") {
+    const snapshot = captureSavedSnapshot();
+    const listType = String(target.dataset.listType || "").trim();
+    const reference = normalizeReference(target.dataset.reference || "");
+    const translation = normalizeTranslation(
+      target.dataset.translation || "web",
+    );
+
+    if (!reference || (listType !== "history" && listType !== "favorites")) {
+      return;
+    }
+
+    if (listType === "history") {
+      history = history.filter(
+        (item) =>
+          !(
+            item.reference === reference &&
+            normalizeTranslation(item.translation) === translation
+          ),
+      );
+      saveSaved(HISTORY_KEY, history);
+    } else {
+      favorites = favorites.filter(
+        (item) =>
+          !(
+            item.reference === reference &&
+            normalizeTranslation(item.translation) === translation
+          ),
+      );
+      saveSaved(FAVORITES_KEY, favorites);
+    }
+
+    renderSavedLists();
+    showSavedUndoToast(
+      listType === "history" ? "Recent search removed." : "Favorite removed.",
+      snapshot,
+    );
     return;
   }
 
@@ -382,7 +2254,8 @@ async function getVerse() {
   input.value = reference;
   translationSelect.value = translation;
 
-  resultBox.innerHTML = '<div class="meta">Loading verse...</div>';
+  resultBox.innerHTML =
+    '<h2 class="result-heading">Verse Result</h2><div class="meta">Loading verse...</div>';
 
   try {
     const response = await fetch(
@@ -438,9 +2311,185 @@ translationSelect.addEventListener("change", syncVerseDropdown);
 historyList.addEventListener("click", applySavedSelection);
 favoriteList.addEventListener("click", applySavedSelection);
 
+if (topicSearchBtn) {
+  topicSearchBtn.addEventListener("click", loadTopicVerses);
+}
+
+if (bibleSearchBtn) {
+  bibleSearchBtn.addEventListener("click", searchBibleSubject);
+}
+
+if (bibleSubjectInput) {
+  bibleSubjectInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      searchBibleSubject();
+    }
+  });
+}
+
+if (bibleSearchClearBtn) {
+  bibleSearchClearBtn.addEventListener("click", clearBibleSearch);
+}
+
+if (opinionSearchBtn) {
+  opinionSearchBtn.addEventListener("click", searchOpinionSubject);
+}
+
+if (opinionSubjectInput) {
+  opinionSubjectInput.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      searchOpinionSubject();
+    }
+  });
+
+  opinionSubjectInput.addEventListener("input", () => {
+    if (!String(opinionSubjectInput.value || "").trim()) {
+      clearOpinionLinks();
+    }
+  });
+}
+
+if (topicResultsBox) {
+  topicResultsBox.addEventListener("click", loadTopicVerseFromButton);
+}
+
+if (clearHistoryBtn) {
+  clearHistoryBtn.addEventListener("click", clearHistory);
+}
+
+if (clearFavoritesBtn) {
+  clearFavoritesBtn.addEventListener("click", clearFavorites);
+}
+
+if (undoToastActionBtn) {
+  undoToastActionBtn.addEventListener("click", undoSavedListChange);
+}
+
+if (undoToastCloseBtn) {
+  undoToastCloseBtn.addEventListener("click", () => {
+    savedUndoSnapshot = null;
+    hideSavedUndoToast();
+  });
+}
+
+if (saveCustomTopicBtn) {
+  saveCustomTopicBtn.addEventListener("click", saveCustomTopic);
+}
+
+if (cancelCustomTopicEditBtn) {
+  cancelCustomTopicEditBtn.addEventListener("click", cancelCustomTopicEdit);
+}
+
+if (deleteCustomTopicBtn) {
+  deleteCustomTopicBtn.addEventListener("click", deleteSelectedCustomTopic);
+}
+
+if (exportCustomTopicsBtn) {
+  exportCustomTopicsBtn.addEventListener("click", exportCustomTopics);
+}
+
+if (importCustomTopicsInput) {
+  importCustomTopicsInput.addEventListener(
+    "change",
+    importCustomTopicsFromFile,
+  );
+}
+
+if (replaceCustomTopicsMode) {
+  replaceCustomTopicsMode.addEventListener("change", syncImportControlState);
+}
+
+if (replaceConfirmInput) {
+  replaceConfirmInput.addEventListener("input", syncImportControlState);
+}
+
+if (customTopicList) {
+  customTopicList.addEventListener("click", selectCustomTopicFromList);
+}
+
+if (compactModeBtn) {
+  compactModeBtn.addEventListener("click", () => applyReadingMode("compact"));
+}
+
+if (comfortableModeBtn) {
+  comfortableModeBtn.addEventListener("click", () =>
+    applyReadingMode("comfortable"),
+  );
+}
+
+if (focusModeBtn) {
+  focusModeBtn.addEventListener("click", toggleFocusMode);
+}
+
+if (spacingModeBtn) {
+  spacingModeBtn.addEventListener("click", toggleSpacingMode);
+}
+
+if (themePresetSelect) {
+  themePresetSelect.addEventListener("change", () => {
+    const presetId = String(themePresetSelect.value || "").trim();
+    if (presetId === "custom") {
+      return;
+    }
+    applyThemePreset(presetId);
+  });
+}
+
+[
+  themeBgInput,
+  themeCardInput,
+  themeCardStrongInput,
+  themeTextInput,
+  themeMutedInput,
+  themeAccentInput,
+  themeAccent2Input,
+  themeLineInput,
+].forEach((inputElement) => {
+  if (inputElement) {
+    inputElement.addEventListener("input", updateThemeFromInputs);
+    inputElement.addEventListener("change", updateThemeFromInputs);
+    inputElement.addEventListener("focus", () =>
+      startThemeColorLiveSync(inputElement),
+    );
+    inputElement.addEventListener("blur", stopThemeColorLiveSync);
+    inputElement.addEventListener("pointerdown", () =>
+      startThemeColorLiveSync(inputElement),
+    );
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState !== "visible") {
+    stopThemeColorLiveSync();
+  }
+});
+
+if (resetThemeBtn) {
+  resetThemeBtn.addEventListener("click", resetTheme);
+}
+
+if (exportThemeBtn) {
+  exportThemeBtn.addEventListener("click", exportTheme);
+}
+
+if (importThemeInput) {
+  importThemeInput.addEventListener("change", importThemeFromFile);
+}
+
+setupThemeHexCopy();
+
 populateBookSelect();
 populateChapterSelect();
 populateVerseSelect(50);
 renderSavedLists();
+applyReadingMode(readingMode);
+applyFocusMode(focusMode);
+applySpacingMode(spacingMode);
+applyTheme(theme, { silent: true });
+setThemeStatus("Theme ready.");
 syncVerseDropdown();
 loadAdminStatusBadge();
+loadTopics();
+renderCustomTopicList();
+syncImportControlState();
+updateCustomEditorState();
