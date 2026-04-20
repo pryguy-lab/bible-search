@@ -64,41 +64,22 @@ const themeMutedInput = document.getElementById("themeMutedInput");
 const themeAccentInput = document.getElementById("themeAccentInput");
 const themeAccent2Input = document.getElementById("themeAccent2Input");
 const themeLineInput = document.getElementById("themeLineInput");
+const themeBtnInput = document.getElementById("themeBtnInput");
+const themeBtnActiveInput = document.getElementById("themeBtnActiveInput");
 const resetThemeBtn = document.getElementById("resetThemeBtn");
 const exportThemeBtn = document.getElementById("exportThemeBtn");
 const importThemeInput = document.getElementById("importThemeInput");
 const themeStatus = document.getElementById("themeStatus");
 const themeSwatchBg = document.getElementById("themeSwatchBg");
-const themeSwatchCard = document.getElementById("themeSwatchCard");
-const themeSwatchCardStrong = document.getElementById("themeSwatchCardStrong");
 const themeSwatchText = document.getElementById("themeSwatchText");
-const themeSwatchMuted = document.getElementById("themeSwatchMuted");
-const themeSwatchAccent = document.getElementById("themeSwatchAccent");
-const themeSwatchAccent2 = document.getElementById("themeSwatchAccent2");
-const themeSwatchLine = document.getElementById("themeSwatchLine");
+const themeSwatchBtn = document.getElementById("themeSwatchBtn");
 const themeSwatchBgValue = document.getElementById("themeSwatchBgValue");
-const themeSwatchCardValue = document.getElementById("themeSwatchCardValue");
-const themeSwatchCardStrongValue = document.getElementById(
-  "themeSwatchCardStrongValue",
-);
 const themeSwatchTextValue = document.getElementById("themeSwatchTextValue");
-const themeSwatchMutedValue = document.getElementById("themeSwatchMutedValue");
-const themeSwatchAccentValue = document.getElementById(
-  "themeSwatchAccentValue",
-);
-const themeSwatchAccent2Value = document.getElementById(
-  "themeSwatchAccent2Value",
-);
-const themeSwatchLineValue = document.getElementById("themeSwatchLineValue");
+const themeSwatchBtnValue = document.getElementById("themeSwatchBtnValue");
 const themeHexValueElements = [
   themeSwatchBgValue,
-  themeSwatchCardValue,
-  themeSwatchCardStrongValue,
   themeSwatchTextValue,
-  themeSwatchMutedValue,
-  themeSwatchAccentValue,
-  themeSwatchAccent2Value,
-  themeSwatchLineValue,
+  themeSwatchBtnValue,
 ];
 
 const HISTORY_KEY = "bibleVerseHistory";
@@ -122,6 +103,8 @@ const DEFAULT_THEME = {
   accent: "#8c4a2f",
   accent2: "#315e49",
   line: "#dfd1bb",
+  btnBg: "#fffcf5",
+  btnBgActive: "#fbf8f1",
 };
 
 const PRESET_THEMES = {
@@ -137,6 +120,8 @@ const PRESET_THEMES = {
     accent: "#4f6d45",
     accent2: "#315e49",
     line: "#cdd8c6",
+    btnBg: "#f9fcf8",
+    btnBgActive: "#edf4ea",
   },
   ocean: {
     bg: "#e9f1f4",
@@ -147,6 +132,8 @@ const PRESET_THEMES = {
     accent: "#2f628c",
     accent2: "#2d6d76",
     line: "#c6d8e2",
+    btnBg: "#f7fcff",
+    btnBgActive: "#edf6fb",
   },
   contrast: {
     bg: "#f1f1f1",
@@ -157,6 +144,8 @@ const PRESET_THEMES = {
     accent: "#8b2d00",
     accent2: "#004c43",
     line: "#bdbdbd",
+    btnBg: "#ffffff",
+    btnBgActive: "#f0f0f0",
   },
 };
 
@@ -267,6 +256,11 @@ function loadTheme() {
       accent: normalizeHexColor(raw.accent, DEFAULT_THEME.accent),
       accent2: normalizeHexColor(raw.accent2, DEFAULT_THEME.accent2),
       line: normalizeHexColor(raw.line, DEFAULT_THEME.line),
+      btnBg: normalizeHexColor(raw.btnBg, DEFAULT_THEME.btnBg),
+      btnBgActive: normalizeHexColor(
+        raw.btnBgActive,
+        DEFAULT_THEME.btnBgActive,
+      ),
     };
   } catch {
     return { ...DEFAULT_THEME };
@@ -282,7 +276,9 @@ function themesEqual(a, b) {
     a.muted === b.muted &&
     a.accent === b.accent &&
     a.accent2 === b.accent2 &&
-    a.line === b.line
+    a.line === b.line &&
+    a.btnBg === b.btnBg &&
+    a.btnBgActive === b.btnBgActive
   );
 }
 
@@ -327,6 +323,12 @@ function syncThemeInputs(themeValue) {
   if (themeLineInput) {
     themeLineInput.value = themeValue.line;
   }
+  if (themeBtnInput) {
+    themeBtnInput.value = themeValue.btnBg;
+  }
+  if (themeBtnActiveInput) {
+    themeBtnActiveInput.value = themeValue.btnBgActive;
+  }
   if (themePresetSelect) {
     themePresetSelect.value = inferThemePreset(themeValue);
   }
@@ -342,13 +344,8 @@ function setThemeStatus(text) {
 function updateThemePreview(themeValue) {
   const previewPairs = [
     [themeSwatchBg, themeSwatchBgValue, themeValue.bg],
-    [themeSwatchCard, themeSwatchCardValue, themeValue.card],
-    [themeSwatchCardStrong, themeSwatchCardStrongValue, themeValue.cardStrong],
     [themeSwatchText, themeSwatchTextValue, themeValue.text],
-    [themeSwatchMuted, themeSwatchMutedValue, themeValue.muted],
-    [themeSwatchAccent, themeSwatchAccentValue, themeValue.accent],
-    [themeSwatchAccent2, themeSwatchAccent2Value, themeValue.accent2],
-    [themeSwatchLine, themeSwatchLineValue, themeValue.line],
+    [themeSwatchBtn, themeSwatchBtnValue, themeValue.btnBg],
   ];
 
   previewPairs.forEach(([chipElement, valueElement, colorValue]) => {
@@ -462,6 +459,80 @@ function darkenHex(hex, amount) {
   return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
 }
 
+function lightenHex(hex, amount) {
+  const h = hex.replace("#", "");
+  const full =
+    h.length === 3
+      ? h
+          .split("")
+          .map((c) => c + c)
+          .join("")
+      : h;
+  const r = Math.min(255, parseInt(full.slice(0, 2), 16) + amount);
+  const g = Math.min(255, parseInt(full.slice(2, 4), 16) + amount);
+  const b = Math.min(255, parseInt(full.slice(4, 6), 16) + amount);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+function mixHex(hexA, hexB, ratioToB = 0.5) {
+  const clampedRatio = Math.min(1, Math.max(0, ratioToB));
+  const parseRgb = (hex) => {
+    const h = String(hex || "").replace("#", "");
+    const full =
+      h.length === 3
+        ? h
+            .split("")
+            .map((c) => c + c)
+            .join("")
+        : h;
+    return [
+      parseInt(full.slice(0, 2), 16),
+      parseInt(full.slice(2, 4), 16),
+      parseInt(full.slice(4, 6), 16),
+    ];
+  };
+
+  const a = parseRgb(hexA);
+  const b = parseRgb(hexB);
+  const mixed = a.map((channel, index) => {
+    const value = Math.round(
+      channel * (1 - clampedRatio) + b[index] * clampedRatio,
+    );
+    return Math.min(255, Math.max(0, value));
+  });
+
+  return `#${mixed[0].toString(16).padStart(2, "0")}${mixed[1].toString(16).padStart(2, "0")}${mixed[2].toString(16).padStart(2, "0")}`;
+}
+
+function buildDerivedTheme(baseTheme, currentTheme) {
+  const bg = normalizeHexColor(
+    baseTheme.bg,
+    currentTheme.bg || DEFAULT_THEME.bg,
+  );
+  const text = normalizeHexColor(
+    baseTheme.text,
+    currentTheme.text || DEFAULT_THEME.text,
+  );
+  const btnBg = normalizeHexColor(
+    baseTheme.btnBg,
+    currentTheme.btnBg || DEFAULT_THEME.btnBg,
+  );
+
+  return {
+    ...currentTheme,
+    bg,
+    text,
+    btnBg,
+    card: lightenHex(bg, 10),
+    cardStrong: lightenHex(bg, 16),
+    muted: mixHex(text, bg, 0.45),
+    accent: darkenHex(btnBg, 18),
+    accent2: darkenHex(btnBg, 30),
+    line: darkenHex(bg, 18),
+    btnBgActive: darkenHex(btnBg, 8),
+  };
+}
+
 function applyTheme(themeValue, options = {}) {
   const nextTheme = {
     bg: normalizeHexColor(themeValue.bg, DEFAULT_THEME.bg),
@@ -475,6 +546,11 @@ function applyTheme(themeValue, options = {}) {
     accent: normalizeHexColor(themeValue.accent, DEFAULT_THEME.accent),
     accent2: normalizeHexColor(themeValue.accent2, DEFAULT_THEME.accent2),
     line: normalizeHexColor(themeValue.line, DEFAULT_THEME.line),
+    btnBg: normalizeHexColor(themeValue.btnBg, DEFAULT_THEME.btnBg),
+    btnBgActive: normalizeHexColor(
+      themeValue.btnBgActive,
+      DEFAULT_THEME.btnBgActive,
+    ),
   };
 
   theme = nextTheme;
@@ -489,8 +565,8 @@ function applyTheme(themeValue, options = {}) {
   root.style.setProperty("--accent-2", nextTheme.accent2);
   root.style.setProperty("--line", nextTheme.line);
   root.style.setProperty("--accent-soft", `${nextTheme.accent}22`);
-  root.style.setProperty("--btn-bg", darkenHex(nextTheme.bg, 12));
-  root.style.setProperty("--btn-bg-active", darkenHex(nextTheme.bg, 24));
+  root.style.setProperty("--btn-bg", nextTheme.btnBg);
+  root.style.setProperty("--btn-bg-active", nextTheme.btnBgActive);
 
   syncThemeInputs(nextTheme);
   updateThemePreview(nextTheme);
@@ -514,14 +590,23 @@ function applyThemePreset(presetId) {
 
 function updateThemeFromInputs() {
   const nextTheme = {
-    bg: themeBgInput?.value,
-    card: themeCardInput?.value,
-    cardStrong: themeCardStrongInput?.value,
-    text: themeTextInput?.value,
-    muted: themeMutedInput?.value,
-    accent: themeAccentInput?.value,
-    accent2: themeAccent2Input?.value,
-    line: themeLineInput?.value,
+    ...theme,
+    bg: normalizeHexColor(themeBgInput?.value, theme.bg),
+    card: normalizeHexColor(themeCardInput?.value, theme.card),
+    cardStrong: normalizeHexColor(
+      themeCardStrongInput?.value,
+      theme.cardStrong,
+    ),
+    text: normalizeHexColor(themeTextInput?.value, theme.text),
+    muted: normalizeHexColor(themeMutedInput?.value, theme.muted),
+    accent: normalizeHexColor(themeAccentInput?.value, theme.accent),
+    accent2: normalizeHexColor(themeAccent2Input?.value, theme.accent2),
+    line: normalizeHexColor(themeLineInput?.value, theme.line),
+    btnBg: normalizeHexColor(themeBtnInput?.value, theme.btnBg),
+    btnBgActive: normalizeHexColor(
+      themeBtnActiveInput?.value,
+      theme.btnBgActive,
+    ),
   };
 
   applyTheme(nextTheme);
@@ -2444,6 +2529,8 @@ if (themePresetSelect) {
   themeAccentInput,
   themeAccent2Input,
   themeLineInput,
+  themeBtnInput,
+  themeBtnActiveInput,
 ].forEach((inputElement) => {
   if (inputElement) {
     inputElement.addEventListener("input", updateThemeFromInputs);

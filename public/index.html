@@ -310,42 +310,44 @@
       }
 
       .theme-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 1.1rem;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: 0.45rem;
+        overflow-x: auto;
+        padding-bottom: 0.15rem;
       }
 
       .theme-color-field {
-        display: grid;
-        justify-items: center;
-        gap: 0.22rem;
-        padding: 0.5rem 0.4rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.34rem;
+        padding: 0.28rem 0.48rem;
         border: 1px solid var(--line);
-        border-radius: 12px;
+        border-radius: 999px;
         background: var(--card-strong);
+        white-space: nowrap;
+        flex: 0 0 auto;
       }
 
       .theme-color-field label {
         color: var(--muted);
-        font-size: 0.66rem;
+        font-size: 0.64rem;
         font-weight: 700;
         text-align: center;
-        line-height: 1.2;
+        line-height: 1;
       }
 
       .theme-color-meta {
-        display: grid;
-        justify-items: center;
-        gap: 0.22rem;
-        margin-top: 0.15rem;
+        display: none;
       }
 
       .theme-color-input {
-        width: 24px;
-        height: 24px;
-        min-height: 24px;
-        min-width: 24px;
-        max-width: 24px;
+        width: 19px;
+        height: 19px;
+        min-height: 19px;
+        min-width: 19px;
+        max-width: 19px;
         border: 1px solid #cdbb9c;
         border-radius: 50%;
         padding: 0;
@@ -353,7 +355,7 @@
         background: transparent;
         appearance: none;
         -webkit-appearance: none;
-        flex: 0 0 24px;
+        flex: 0 0 19px;
         display: block;
         cursor: pointer;
       }
@@ -976,9 +978,8 @@
       }
 
       .theme-card .theme-grid {
-        margin-top: 0.4rem;
-        grid-template-columns: repeat(8, minmax(0, 1fr));
-        gap: 1.1rem;
+        margin-top: 0.25rem;
+        gap: 0.45rem;
       }
 
       .theme-card .theme-actions {
@@ -1034,7 +1035,7 @@
       }
 
       body[data-spacing-mode="relaxed"] .theme-card .theme-grid {
-        gap: 1.7rem;
+        gap: 0.6rem;
       }
 
       body[data-spacing-mode="relaxed"] .passage-card .builder,
@@ -1173,10 +1174,6 @@
           grid-template-columns: 1fr;
         }
 
-        .theme-card .theme-grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-
         .theme-actions {
           flex-wrap: wrap;
           overflow-x: visible;
@@ -1204,8 +1201,7 @@
         .builder,
         .toolbar,
         .topic-bar,
-        .custom-editor-grid,
-        .theme-grid {
+        .custom-editor-grid {
           grid-template-columns: 1fr;
         }
 
@@ -1346,22 +1342,8 @@
         <article class="control-card full theme-card">
           <h2 class="control-card-heading">Theme Customizer</h2>
           <p class="control-card-copy">
-            Choose a preset palette or fine-tune your own colors for background,
-            text, and accents.
+            Fine-tune every theme color with separate pickers.
           </p>
-
-          <div class="field-block">
-            <label class="field-label" for="themePresetSelect"
-              >Color Preset</label
-            >
-            <select id="themePresetSelect" aria-label="Select color preset">
-              <option value="warm">Warm Parchment</option>
-              <option value="forest">Forest Study</option>
-              <option value="ocean">Ocean Notes</option>
-              <option value="contrast">High Contrast</option>
-              <option value="custom">Custom</option>
-            </select>
-          </div>
 
           <div class="theme-grid">
             <div class="theme-color-field">
@@ -1379,31 +1361,14 @@
                 class="theme-color-input"
                 type="color"
               />
-              <div class="theme-color-meta">
-                <span id="themeSwatchCard" class="theme-swatch-chip"></span>
-                <span
-                  id="themeSwatchCardValue"
-                  class="theme-swatch-value"
-                ></span>
-              </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeCardStrongInput">Header Card</label>
+              <label for="themeCardStrongInput">Card Strong</label>
               <input
                 id="themeCardStrongInput"
                 class="theme-color-input"
                 type="color"
               />
-              <div class="theme-color-meta">
-                <span
-                  id="themeSwatchCardStrong"
-                  class="theme-swatch-chip"
-                ></span>
-                <span
-                  id="themeSwatchCardStrongValue"
-                  class="theme-swatch-value"
-                ></span>
-              </div>
             </div>
             <div class="theme-color-field">
               <label for="themeTextInput">Text</label>
@@ -1427,58 +1392,53 @@
                 class="theme-color-input"
                 type="color"
               />
-              <div class="theme-color-meta">
-                <span id="themeSwatchMuted" class="theme-swatch-chip"></span>
-                <span
-                  id="themeSwatchMutedValue"
-                  class="theme-swatch-value"
-                ></span>
-              </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeAccentInput">Primary Accent</label>
+              <label for="themeAccentInput">Accent</label>
               <input
                 id="themeAccentInput"
                 class="theme-color-input"
                 type="color"
               />
-              <div class="theme-color-meta">
-                <span id="themeSwatchAccent" class="theme-swatch-chip"></span>
-                <span
-                  id="themeSwatchAccentValue"
-                  class="theme-swatch-value"
-                ></span>
-              </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeAccent2Input">Secondary Accent</label>
+              <label for="themeAccent2Input">Accent 2</label>
               <input
                 id="themeAccent2Input"
                 class="theme-color-input"
                 type="color"
               />
-              <div class="theme-color-meta">
-                <span id="themeSwatchAccent2" class="theme-swatch-chip"></span>
-                <span
-                  id="themeSwatchAccent2Value"
-                  class="theme-swatch-value"
-                ></span>
-              </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeLineInput">Border Line</label>
+              <label for="themeLineInput">Line</label>
               <input
                 id="themeLineInput"
                 class="theme-color-input"
                 type="color"
               />
+            </div>
+            <div class="theme-color-field">
+              <label for="themeBtnInput">Button</label>
+              <input
+                id="themeBtnInput"
+                class="theme-color-input"
+                type="color"
+              />
               <div class="theme-color-meta">
-                <span id="themeSwatchLine" class="theme-swatch-chip"></span>
+                <span id="themeSwatchBtn" class="theme-swatch-chip"></span>
                 <span
-                  id="themeSwatchLineValue"
+                  id="themeSwatchBtnValue"
                   class="theme-swatch-value"
                 ></span>
               </div>
+            </div>
+            <div class="theme-color-field">
+              <label for="themeBtnActiveInput">Button Active</label>
+              <input
+                id="themeBtnActiveInput"
+                class="theme-color-input"
+                type="color"
+              />
             </div>
           </div>
 
