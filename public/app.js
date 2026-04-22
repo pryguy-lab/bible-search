@@ -51,6 +51,10 @@ const undoToastText = document.getElementById("undoToastText");
 const undoToastActionBtn = document.getElementById("undoToastActionBtn");
 const undoToastCloseBtn = document.getElementById("undoToastCloseBtn");
 const adminStatusBadge = document.getElementById("adminStatusBadge");
+const headerMeta = document.getElementById("headerMeta");
+const mobileHeaderControlsToggleBtn = document.getElementById(
+  "mobileHeaderControlsToggleBtn",
+);
 const compactModeBtn = document.getElementById("compactModeBtn");
 const comfortableModeBtn = document.getElementById("comfortableModeBtn");
 const focusModeBtn = document.getElementById("focusModeBtn");
@@ -234,6 +238,38 @@ let activeThemeColorInput = null;
 let savedUndoSnapshot = null;
 let savedUndoTimer = null;
 const SAVED_UNDO_TIMEOUT_MS = 6000;
+let mobileHeaderControlsOpen = false;
+
+function updateMobileHeaderControls() {
+  if (!headerMeta || !mobileHeaderControlsToggleBtn) {
+    return;
+  }
+
+  const isCollapsibleViewport =
+    window.matchMedia("(max-width: 640px)").matches && focusMode !== "on";
+
+  mobileHeaderControlsToggleBtn.hidden = !isCollapsibleViewport;
+
+  if (!isCollapsibleViewport) {
+    headerMeta.classList.add("header-meta-open");
+    mobileHeaderControlsToggleBtn.setAttribute("aria-expanded", "true");
+    return;
+  }
+
+  headerMeta.classList.toggle("header-meta-open", mobileHeaderControlsOpen);
+  mobileHeaderControlsToggleBtn.setAttribute(
+    "aria-expanded",
+    String(mobileHeaderControlsOpen),
+  );
+  mobileHeaderControlsToggleBtn.textContent = mobileHeaderControlsOpen
+    ? "Hide Quick Controls"
+    : "Show Quick Controls";
+}
+
+function toggleMobileHeaderControls() {
+  mobileHeaderControlsOpen = !mobileHeaderControlsOpen;
+  updateMobileHeaderControls();
+}
 
 function normalizeHexColor(value, fallback) {
   const color = String(value || "").trim();
@@ -782,6 +818,7 @@ function applyFocusMode(mode) {
     // Ignore storage failures and still apply the mode locally.
   }
   updateFocusModeButton();
+  updateMobileHeaderControls();
 }
 
 function toggleFocusMode() {
@@ -2510,6 +2547,15 @@ if (spacingModeBtn) {
   spacingModeBtn.addEventListener("click", toggleSpacingMode);
 }
 
+if (mobileHeaderControlsToggleBtn) {
+  mobileHeaderControlsToggleBtn.addEventListener(
+    "click",
+    toggleMobileHeaderControls,
+  );
+}
+
+window.addEventListener("resize", updateMobileHeaderControls);
+
 if (themePresetSelect) {
   themePresetSelect.addEventListener("change", () => {
     const presetId = String(themePresetSelect.value || "").trim();
@@ -2574,6 +2620,7 @@ applyFocusMode(focusMode);
 applySpacingMode(spacingMode);
 applyTheme(theme, { silent: true });
 setThemeStatus("Theme ready.");
+updateMobileHeaderControls();
 syncVerseDropdown();
 loadAdminStatusBadge();
 loadTopics();
