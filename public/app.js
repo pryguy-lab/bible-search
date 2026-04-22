@@ -50,7 +50,6 @@ const undoToast = document.getElementById("undoToast");
 const undoToastText = document.getElementById("undoToastText");
 const undoToastActionBtn = document.getElementById("undoToastActionBtn");
 const undoToastCloseBtn = document.getElementById("undoToastCloseBtn");
-const adminStatusBadge = document.getElementById("adminStatusBadge");
 const headerMeta = document.getElementById("headerMeta");
 const mobileHeaderControlsToggleBtn = document.getElementById(
   "mobileHeaderControlsToggleBtn",
@@ -1364,39 +1363,6 @@ function renderError(message) {
   `;
 }
 
-function setAdminStatusBadge(text, statusClass) {
-  if (!adminStatusBadge) {
-    return;
-  }
-
-  adminStatusBadge.textContent = text;
-  adminStatusBadge.className = `status-badge ${statusClass}`;
-}
-
-async function loadAdminStatusBadge() {
-  if (!adminStatusBadge) {
-    return;
-  }
-
-  try {
-    const response = await fetch("/api/admin/status");
-    if (!response.ok) {
-      setAdminStatusBadge("Admin Telemetry: Unknown", "status-unknown");
-      return;
-    }
-
-    const payload = await response.json();
-    if (payload && payload.adminTelemetryEnabled === true) {
-      setAdminStatusBadge("Admin Telemetry: Enabled", "status-enabled");
-      return;
-    }
-
-    setAdminStatusBadge("Admin Telemetry: Disabled", "status-disabled");
-  } catch {
-    setAdminStatusBadge("Admin Telemetry: Unknown", "status-unknown");
-  }
-}
-
 async function parseJsonSafe(response) {
   try {
     return await response.json();
@@ -2622,7 +2588,6 @@ applyTheme(theme, { silent: true });
 setThemeStatus("Theme ready.");
 updateMobileHeaderControls();
 syncVerseDropdown();
-loadAdminStatusBadge();
 loadTopics();
 renderCustomTopicList();
 syncImportControlState();

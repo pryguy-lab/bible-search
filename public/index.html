@@ -171,33 +171,6 @@
         color: var(--text);
       }
 
-      .status-badge {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.28rem 0.7rem;
-        border-radius: 999px;
-        font-size: 0.78rem;
-        font-weight: 700;
-      }
-
-      .status-enabled {
-        background: #e3f3e8;
-        color: #1d5f3f;
-        border: 1px solid #b6dfc2;
-      }
-
-      .status-disabled {
-        background: #fbe9e6;
-        color: #8b3024;
-        border: 1px solid #e9bdb6;
-      }
-
-      .status-unknown {
-        background: #f1ece3;
-        color: #6f6a5f;
-        border: 1px solid #ddd1be;
-      }
-
       .controls {
         display: grid;
         grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.95fr);
@@ -1334,7 +1307,6 @@
           align-items: stretch;
         }
 
-        .status-badge,
         .focus-mode-btn,
         .spacing-mode-btn {
           width: 100%;
@@ -1643,9 +1615,6 @@
           Show Quick Controls
         </button>
         <div id="headerMeta" class="header-meta">
-          <span id="adminStatusBadge" class="status-badge status-unknown"
-            >Admin Telemetry: Checking...</span
-          >
           <div class="reading-mode-switch" aria-label="Reading mode toggle">
             <button
               id="compactModeBtn"

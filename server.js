@@ -1,7 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
 const path = require("path");
-const crypto = require("crypto");
 const { createClient } = require("redis");
 
 const app = express();
@@ -18,7 +17,6 @@ const LOG_REQUESTS = process.env.LOG_REQUESTS !== "0";
 const ALERT_WINDOW_MS = Number(process.env.ALERT_WINDOW_MS || 60_000);
 const ALERT_4XX_THRESHOLD = Number(process.env.ALERT_4XX_THRESHOLD || 25);
 const ALERT_429_THRESHOLD = Number(process.env.ALERT_429_THRESHOLD || 10);
-const ADMIN_API_KEY = String(process.env.ADMIN_API_KEY || "");
 const TOPICS = [
   {
     id: "holy-spirit",
@@ -147,38 +145,6 @@ setInterval(() => {
 
 function getClientIp(req) {
   return req.ip || req.socket.remoteAddress || "unknown";
-}
-
-function isValidAdminKey(candidate) {
-  if (!ADMIN_API_KEY) {
-    return false;
-  }
-
-  const expected = Buffer.from(ADMIN_API_KEY, "utf8");
-  const provided = Buffer.from(String(candidate || ""), "utf8");
-
-  if (expected.length !== provided.length) {
-    return false;
-  }
-
-  return crypto.timingSafeEqual(expected, provided);
-}
-
-function requireAdmin(req, res, next) {
-  if (!ADMIN_API_KEY) {
-    return res.status(503).json({
-      error: "Admin endpoint is disabled.",
-    });
-  }
-
-  const providedKey = req.get("x-admin-key");
-  if (!isValidAdminKey(providedKey)) {
-    return res.status(401).json({
-      error: "Unauthorized.",
-    });
-  }
-
-  return next();
 }
 
 function recordSecurityTelemetry(req, statusCode, durationMs) {
@@ -352,10 +318,6 @@ app.use(async (req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, "public")));
-
-app.get("/admin", (req, res) => {
-  return res.sendFile(path.join(__dirname, "public", "admin.html"));
-});
 
 function cleanTranslation(raw) {
   const translation = String(raw || "")
@@ -632,48 +594,8 @@ app.get("/api/topic-verses", async (req, res) => {
   }
 });
 
-app.get("/api/admin/telemetry", requireAdmin, (req, res) => {
-  const now = Date.now();
-  const entries = [];
-
-  for (const [ip, bucket] of alertBuckets.entries()) {
-    const remainingMs = Math.max(0, bucket.resetAt - now);
-    entries.push({
-      ip,
-      status4xx: bucket.status4xx,
-      status429: bucket.status429,
-      remainingMs,
-    });
-  }
-
-  entries.sort(
-    (a, b) => b.status429 - a.status429 || b.status4xx - a.status4xx,
-  );
-
-  return res.json({
-    generatedAt: new Date(now).toISOString(),
-    thresholds: {
-      alertWindowMs: ALERT_WINDOW_MS,
-      alert4xxThreshold: ALERT_4XX_THRESHOLD,
-      alert429Threshold: ALERT_429_THRESHOLD,
-    },
-    limiter: {
-      mode: redisReady ? "redis" : "memory",
-      redisConfigured: Boolean(REDIS_URL),
-      redisReady,
-    },
-    counters: entries.slice(0, 100),
-  });
-});
-
-app.get("/api/admin/status", (req, res) => {
-  return res.json({
-    adminTelemetryEnabled: Boolean(ADMIN_API_KEY),
-  });
-});
-
 app.listen(PORT, () => {
   console.log(
-    `Bible API running at http://localhost:${PORT} (trust proxy: ${TRUST_PROXY_SETTING ? "enabled" : "disabled"}, admin endpoint: ${ADMIN_API_KEY ? "enabled" : "disabled"})`,
+    `Bible API running at http://localhost:${PORT} (trust proxy: ${TRUST_PROXY_SETTING ? "enabled" : "disabled"})`,
   );
 });

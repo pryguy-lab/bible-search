@@ -1,5 +1,4 @@
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
-const ADMIN_API_KEY_TEST = process.env.ADMIN_API_KEY_TEST || "";
 
 const checks = [];
 
@@ -74,28 +73,6 @@ async function main() {
     badTranslation.response.status === 400,
     `status=${badTranslation.response.status}`,
   );
-
-  const adminNoKey = await fetchJson("/api/admin/telemetry");
-  const adminNoKeyAllowedStatuses = new Set([401, 503]);
-  assert(
-    "Admin telemetry blocked without key",
-    adminNoKeyAllowedStatuses.has(adminNoKey.response.status),
-    `status=${adminNoKey.response.status}`,
-  );
-
-  if (ADMIN_API_KEY_TEST) {
-    const adminWithKey = await fetchJson("/api/admin/telemetry", {
-      headers: {
-        "x-admin-key": ADMIN_API_KEY_TEST,
-      },
-    });
-
-    assert(
-      "Admin telemetry works with key",
-      adminWithKey.response.status === 200,
-      `status=${adminWithKey.response.status}`,
-    );
-  }
 
   let tooMany = 0;
   for (let i = 0; i < 70; i += 1) {
