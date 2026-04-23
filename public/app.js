@@ -6,6 +6,7 @@ const translationSelect = document.getElementById("translationSelect");
 const bookSelect = document.getElementById("bookSelect");
 const chapterSelect = document.getElementById("chapterSelect");
 const verseSelect = document.getElementById("verseSelect");
+const passageMeta = document.getElementById("passageMeta");
 const buildBtn = document.getElementById("buildBtn");
 const bibleSubjectInput = document.getElementById("bibleSubjectInput");
 const bibleSearchBtn = document.getElementById("bibleSearchBtn");
@@ -220,6 +221,75 @@ const BOOKS = [
   { name: "Jude", chapters: 1 },
   { name: "Revelation", chapters: 22 },
 ];
+
+const BOOK_VERSE_TOTALS = {
+  Genesis: 1533,
+  Exodus: 1213,
+  Leviticus: 859,
+  Numbers: 1288,
+  Deuteronomy: 959,
+  Joshua: 658,
+  Judges: 618,
+  Ruth: 85,
+  "1 Samuel": 810,
+  "2 Samuel": 695,
+  "1 Kings": 816,
+  "2 Kings": 719,
+  "1 Chronicles": 942,
+  "2 Chronicles": 822,
+  Ezra: 280,
+  Nehemiah: 406,
+  Esther: 167,
+  Job: 1070,
+  Psalms: 2461,
+  Proverbs: 915,
+  Ecclesiastes: 222,
+  "Song of Solomon": 117,
+  Isaiah: 1292,
+  Jeremiah: 1364,
+  Lamentations: 154,
+  Ezekiel: 1273,
+  Daniel: 357,
+  Hosea: 197,
+  Joel: 73,
+  Amos: 146,
+  Obadiah: 21,
+  Jonah: 48,
+  Micah: 105,
+  Nahum: 47,
+  Habakkuk: 56,
+  Zephaniah: 53,
+  Haggai: 38,
+  Zechariah: 211,
+  Malachi: 55,
+  Matthew: 1071,
+  Mark: 678,
+  Luke: 1151,
+  John: 879,
+  Acts: 1007,
+  Romans: 433,
+  "1 Corinthians": 437,
+  "2 Corinthians": 257,
+  Galatians: 149,
+  Ephesians: 155,
+  Philippians: 104,
+  Colossians: 95,
+  "1 Thessalonians": 89,
+  "2 Thessalonians": 47,
+  "1 Timothy": 113,
+  "2 Timothy": 83,
+  Titus: 46,
+  Philemon: 25,
+  Hebrews: 303,
+  James: 108,
+  "1 Peter": 105,
+  "2 Peter": 61,
+  "1 John": 105,
+  "2 John": 13,
+  "3 John": 14,
+  Jude: 25,
+  Revelation: 404,
+};
 
 let history = loadSaved(HISTORY_KEY);
 let favorites = loadSaved(FAVORITES_KEY);
@@ -1298,6 +1368,7 @@ function populateChapterSelect() {
 
   chapterSelect.innerHTML = chapterOptions.join("");
   chapterSelect.value = "3";
+  updatePassageMeta();
 }
 
 function populateVerseSelect(verseCount = 50) {
@@ -1313,6 +1384,31 @@ function populateVerseSelect(verseCount = 50) {
 
 function buildReferenceFromSelectors() {
   input.value = `${bookSelect.value} ${chapterSelect.value}:${verseSelect.value}`;
+}
+
+function updatePassageMeta(selectedChapterVerseCount = null) {
+  if (!passageMeta) {
+    return;
+  }
+
+  const selectedBook =
+    BOOKS.find((book) => book.name === bookSelect.value) || BOOKS[0];
+  const totalVerses = BOOK_VERSE_TOTALS[selectedBook.name];
+  const chapter = Number(chapterSelect.value) || 1;
+  const chapterCountLabel =
+    selectedBook.chapters === 1
+      ? "1 chapter"
+      : `${selectedBook.chapters} chapters`;
+  const totalVersesLabel = Number.isFinite(totalVerses)
+    ? `${totalVerses.toLocaleString()} verses`
+    : "verse count unavailable";
+
+  if (Number.isFinite(selectedChapterVerseCount)) {
+    passageMeta.textContent = `${selectedBook.name}: ${chapterCountLabel}, ${totalVersesLabel}. Chapter ${chapter} has ${selectedChapterVerseCount} verses.`;
+    return;
+  }
+
+  passageMeta.textContent = `${selectedBook.name}: ${chapterCountLabel}, ${totalVersesLabel}.`;
 }
 
 async function syncVerseDropdown() {
@@ -1340,8 +1436,11 @@ async function syncVerseDropdown() {
     if (Number(currentVerse) <= verseCount) {
       verseSelect.value = currentVerse;
     }
+
+    updatePassageMeta(verseCount);
   } catch {
     populateVerseSelect(50);
+    updatePassageMeta();
   }
 
   buildReferenceFromSelectors();
@@ -2390,6 +2489,7 @@ input.addEventListener("keydown", (event) => {
 
 bookSelect.addEventListener("change", async () => {
   populateChapterSelect();
+  updatePassageMeta();
   await syncVerseDropdown();
 });
 
