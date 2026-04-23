@@ -1357,7 +1357,7 @@ function populateBookSelect() {
   bookSelect.value = "John";
 }
 
-function populateChapterSelect() {
+function populateChapterSelect(preferredChapter = "") {
   const selected =
     BOOKS.find((book) => book.name === bookSelect.value) || BOOKS[0];
   const chapterOptions = [];
@@ -1367,11 +1367,17 @@ function populateChapterSelect() {
   }
 
   chapterSelect.innerHTML = chapterOptions.join("");
-  chapterSelect.value = "3";
+  const fallbackChapter = selected.name === "John" ? 3 : 1;
+  const normalizedPreferredChapter = Number(preferredChapter);
+  const resolvedChapter = Number.isInteger(normalizedPreferredChapter)
+    ? Math.min(Math.max(normalizedPreferredChapter, 1), selected.chapters)
+    : fallbackChapter;
+
+  chapterSelect.value = String(resolvedChapter);
   updatePassageMeta();
 }
 
-function populateVerseSelect(verseCount = 50) {
+function populateVerseSelect(verseCount = 50, preferredVerse = "") {
   const options = [];
 
   for (let index = 1; index <= verseCount; index += 1) {
@@ -1379,7 +1385,13 @@ function populateVerseSelect(verseCount = 50) {
   }
 
   verseSelect.innerHTML = options.join("");
-  verseSelect.value = "16";
+  const fallbackVerse = verseCount >= 16 ? 16 : 1;
+  const normalizedPreferredVerse = Number(preferredVerse);
+  const resolvedVerse = Number.isInteger(normalizedPreferredVerse)
+    ? Math.min(Math.max(normalizedPreferredVerse, 1), verseCount)
+    : fallbackVerse;
+
+  verseSelect.value = String(resolvedVerse);
 }
 
 function buildReferenceFromSelectors() {
@@ -1431,11 +1443,7 @@ async function syncVerseDropdown() {
     const verseCount = Number(data.verseCount) || 50;
     const currentVerse = verseSelect.value;
 
-    populateVerseSelect(verseCount);
-
-    if (Number(currentVerse) <= verseCount) {
-      verseSelect.value = currentVerse;
-    }
+    populateVerseSelect(verseCount, currentVerse);
 
     updatePassageMeta(verseCount);
   } catch {
@@ -2488,7 +2496,8 @@ input.addEventListener("keydown", (event) => {
 });
 
 bookSelect.addEventListener("change", async () => {
-  populateChapterSelect();
+  const currentChapter = chapterSelect.value;
+  populateChapterSelect(currentChapter);
   updatePassageMeta();
   await syncVerseDropdown();
 });
