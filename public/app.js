@@ -1455,10 +1455,25 @@ async function syncVerseDropdown() {
 }
 
 function renderVerse(payload) {
+  const verses =
+    Array.isArray(payload.verses) && payload.verses.length > 0
+      ? payload.verses
+      : null;
+  let textHtml;
+  if (verses) {
+    textHtml = verses
+      .map(
+        (v) =>
+          `<span class="verse-number">${escapeHtml(String(v.verse))}</span>${escapeHtml(v.text)}`,
+      )
+      .join(" ");
+  } else {
+    textHtml = escapeHtml(payload.text);
+  }
   resultBox.innerHTML = `
     <h2 class="result-heading">Verse Result</h2>
     <div class="reference">${escapeHtml(payload.canonicalReference)}</div>
-    <div class="text">${escapeHtml(payload.text)}</div>
+    <div class="text">${textHtml}</div>
     <div class="meta">Translation: ${escapeHtml(payload.translation || "Unknown")}</div>
   `;
 }
