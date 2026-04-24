@@ -319,6 +319,10 @@ app.use(async (req, res, next) => {
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.get("/README.md", (req, res) => {
+  return res.sendFile(path.join(__dirname, "README.md"));
+});
+
 function cleanTranslation(raw) {
   const translation = String(raw || "")
     .trim()

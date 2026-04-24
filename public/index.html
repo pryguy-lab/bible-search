@@ -84,6 +84,23 @@
         margin-top: 1rem;
       }
 
+      .header-doc-link {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.72rem 1rem;
+        background: var(--btn-bg);
+        color: var(--text);
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .header-doc-link:hover {
+        filter: brightness(0.95);
+      }
+
       .mobile-header-toggle {
         display: none;
         margin-top: 0.95rem;
@@ -1670,6 +1687,13 @@
           >
             Relaxed Spacing
           </button>
+          <a
+            class="header-doc-link"
+            href="/readme.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            >Read Me</a
+          >
         </div>
       </section>
 
