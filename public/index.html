@@ -339,6 +339,10 @@
         line-height: 1;
       }
 
+      .theme-label-short {
+        display: none;
+      }
+
       .theme-color-meta {
         display: none;
       }
@@ -1255,7 +1259,7 @@
 
         .theme-grid {
           display: grid;
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(4, minmax(0, 1fr));
           overflow-x: visible;
           gap: 0.5rem;
         }
@@ -1265,6 +1269,16 @@
           align-items: center;
           justify-content: center;
           min-width: 0;
+          white-space: normal;
+        }
+
+        .theme-color-field label {
+          width: 100%;
+          text-align: center;
+          line-height: 1.15;
+          white-space: normal;
+          overflow-wrap: anywhere;
+          text-wrap: balance;
         }
 
         .theme-actions {
@@ -1443,6 +1457,11 @@
           font-size: 0.95rem;
         }
 
+        .theme-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 0.45rem;
+        }
+
         .theme-preview {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -1468,7 +1487,7 @@
 
       @media (max-width: 400px) {
         .theme-grid {
-          grid-template-columns: repeat(5, 1fr);
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 0.4rem;
         }
 
@@ -1482,12 +1501,20 @@
         }
 
         .theme-color-field label {
-          font-size: 0.58rem;
+          font-size: 0.56rem;
           width: 100%;
           text-align: center;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          white-space: normal;
+          overflow-wrap: anywhere;
+          line-height: 1.15;
+        }
+
+        .theme-label-full {
+          display: none;
+        }
+
+        .theme-label-short {
+          display: inline;
         }
 
         .theme-color-input {
@@ -1755,7 +1782,10 @@
 
           <div class="theme-grid">
             <div class="theme-color-field">
-              <label for="themeBgInput">Background</label>
+              <label for="themeBgInput"
+                ><span class="theme-label-full">Background</span
+                ><span class="theme-label-short">Bg</span></label
+              >
               <input id="themeBgInput" class="theme-color-input" type="color" />
               <div class="theme-color-meta">
                 <span id="themeSwatchBg" class="theme-swatch-chip"></span>
@@ -1771,7 +1801,10 @@
               />
             </div>
             <div class="theme-color-field">
-              <label for="themeCardStrongInput">Card Strong</label>
+              <label for="themeCardStrongInput"
+                ><span class="theme-label-full">Card Strong</span
+                ><span class="theme-label-short">Card+</span></label
+              >
               <input
                 id="themeCardStrongInput"
                 class="theme-color-input"
@@ -1794,7 +1827,10 @@
               </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeMutedInput">Muted Text</label>
+              <label for="themeMutedInput"
+                ><span class="theme-label-full">Muted Text</span
+                ><span class="theme-label-short">Muted</span></label
+              >
               <input
                 id="themeMutedInput"
                 class="theme-color-input"
@@ -1810,7 +1846,10 @@
               />
             </div>
             <div class="theme-color-field">
-              <label for="themeAccent2Input">Accent 2</label>
+              <label for="themeAccent2Input"
+                ><span class="theme-label-full">Accent 2</span
+                ><span class="theme-label-short">Acc 2</span></label
+              >
               <input
                 id="themeAccent2Input"
                 class="theme-color-input"
@@ -1841,7 +1880,10 @@
               </div>
             </div>
             <div class="theme-color-field">
-              <label for="themeBtnActiveInput">Button Active</label>
+              <label for="themeBtnActiveInput"
+                ><span class="theme-label-full">Button Active</span
+                ><span class="theme-label-short">Btn On</span></label
+              >
               <input
                 id="themeBtnActiveInput"
                 class="theme-color-input"
